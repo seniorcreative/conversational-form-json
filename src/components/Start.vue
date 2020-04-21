@@ -6,7 +6,7 @@
     <div class="column">
       <!-- <button type="button" class="button is-primary">Click</button> -->
       <FormSchema :schema="schema" v-model="model" @submit="submit">
-        <button class="button is-primary" type="submit">Subscribe</button>
+        <button class="button is-primary" type="submit">Submit</button>
       </FormSchema>
     </div>
   </div>
@@ -54,7 +54,6 @@ export default {
       $('input[type="checkbox"').removeClass('input')
       $('textarea').addClass('textarea')
       $('select').addClass('select')
-      // $('div[data-fs-field-input]').addClass('field');
       $('div[data-fs-field]').addClass('field')
       $('div[id*="form-schema"] > h1').remove()
       $('div[id*="form-schema"] > p').remove()
