@@ -1,21 +1,32 @@
 <template>
-  <div class="columns">
-    <div class="column is-4">
-      <textarea class="textarea high" v-model="schemaProperties"></textarea>
+  <section>
+
+    <div class="columns">
+      <div class="column is-4 has-text-left">
+        <textarea class="textarea high" v-model="schemaProperties"></textarea>
+        <br>
+        <button type="button" class="button " @click="converse">Start conversation</button>
+      </div>
+      <div class="column">
+        <!-- <button type="button" class="button is-primary">Click</button> -->
+        <FormSchema :schema="schemaInternal" v-model="model" @submit="submit" ref="formSchema">
+          <button class="button is-primary" type="submit">Submit</button>
+        </FormSchema>
+      </div>
     </div>
-    <div class="column">
-      <!-- <button type="button" class="button is-primary">Click</button> -->
-      <FormSchema :schema="schemaInternal" v-model="model" @submit="submit" ref="formSchema">
-        <button class="button is-primary" type="submit">Submit</button>
-      </FormSchema>
-    </div>
-  </div>
+
+    <aside>
+      <!-- Conversation will be rendered into here -->
+    </aside>
+
+  </section>
 </template>
 
 <script>
 // Reference https://gitlab.com/formschema/native
 import FormSchema from '@formschema/native'
 import schema from '../assets/schema/forms.json'
+import { ConversationalForm } from 'conversational-form'
 import $ from 'jquery'
 
 export default {
@@ -33,9 +44,12 @@ export default {
       // You can submit your model to the server here
       // console.log(JSON.stringify(this.model))
     },
-    update (e) {
-      const val = `changed ${e}`
-      console.log('val', val)
+    converse () {
+      console.log('Converse kicked off')
+      const cfInstance = new ConversationalForm({
+        formEl: $('form[cf-form]'),
+        context: $('aside')
+      })
     }
   },
   computed: {
@@ -55,6 +69,7 @@ export default {
     // Run some jQuery on elements after a short wait to add bulma classes.
     setTimeout(() => {
       $('form').addClass('form has-text-left')
+      $('form').attr('cf-form', true)
       $('input').wrap('<div class="control">')
       $('textarea').wrap('<div class="control">')
       $('select').wrap('<div class="control"><div class="select">')
@@ -84,6 +99,7 @@ form {
   margin: 0;
   overflow: scroll;
   text-align: left;
-  font-size: 0.5rem;
+  font-size: 0.7rem;
+  line-height: 1.4;
 }
 </style>
