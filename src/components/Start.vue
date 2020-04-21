@@ -1,11 +1,11 @@
 <template>
   <div class="columns">
     <div class="column is-4">
-      <pre v-html="schema.properties"></pre>
+      <textarea class="textarea high" v-model="schemaProperties"></textarea>
     </div>
     <div class="column">
       <!-- <button type="button" class="button is-primary">Click</button> -->
-      <FormSchema :schema="schema" v-model="model" @submit="submit">
+      <FormSchema :schema="schemaInternal" v-model="model" @submit="submit" ref="formSchema">
         <button class="button is-primary" type="submit">Submit</button>
       </FormSchema>
     </div>
@@ -24,7 +24,7 @@ export default {
     msg: String
   },
   data: () => ({
-    schema,
+    schemaInternal: schema,
     model: {}
   }),
   methods: {
@@ -32,11 +32,22 @@ export default {
       // this.model contains the valid data according your JSON Schema.
       // You can submit your model to the server here
       // console.log(JSON.stringify(this.model))
+    },
+    update (e) {
+      const val = `changed ${e}`
+      console.log('val', val)
     }
   },
   computed: {
-    viewJSON: () => {
-      return JSON.stringify(this.schema)
+    schemaProperties: {
+      get () {
+        return JSON.stringify(schema.properties)
+      },
+      set (value) {
+        schema.properties = JSON.parse(value)
+        this.schemaInternal.properties = schema.properties
+        this.$refs.formSchema.load(this.schemaInternal)
+      }
     }
   },
   components: { FormSchema },
@@ -67,7 +78,7 @@ export default {
 form {
   text-align: left;
 }
-pre {
+.high {
   height: 100vh;
   width: 100%;
   margin: 0;
