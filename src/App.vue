@@ -65,7 +65,9 @@ nav {
   background-color: #1a1a1c;
 }
 section#devpanel {
-  margin-top: 6rem;
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
 }
 section#intro {
   padding-top: 6rem;
@@ -79,15 +81,15 @@ section#intro {
   }
 }
 section#menu {
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
-section#conversations {
+section#formTarget {
   height: calc(100vh - 200px);
-  margin-top: 200px;
+  margin: 0 10rem;
 }
 nav {
   margin: 1rem 0;

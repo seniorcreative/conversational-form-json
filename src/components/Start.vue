@@ -28,12 +28,12 @@ conversation tester</p>
       </ul>
     </section>
     <!-- Dev panels -->
-    <section id="devpanel" v-show="showCode || showForm">
+    <section id="devpanel" class="is-invisible" _v-show="showCode || showForm">
       <div class="columns">
-        <div class="column has-text-left" v-show="showCode">
+        <div class="column has-text-left" _v-show="showCode">
           <textarea class="code" v-model="schemaProperties"></textarea>
         </div>
-        <div class="column" v-show="showForm">
+        <div class="column" _v-show="showForm">
           <!-- <button type="button" class="button is-primary">Click</button> -->
           <FormSchema :schema="schemaInternal" v-model="model" @submit="submit" ref="formSchema">
             <button class="button is-primary" type="submit">Submit</button>
@@ -42,7 +42,7 @@ conversation tester</p>
       </div>
     </section>
     <!-- Conversation tool -->
-    <section id="formTarget" style="height: 500px" _v-show="showConversation">
+    <section id="formTarget" _v-show="showConversation">
     </section>
   </div>
 </template>
@@ -82,11 +82,11 @@ export default {
       this.showMenu = false
       // this.showConversation = true
       // setTimeout(() => {
-      this.decorateForm()
+      // this.decorateForm()
       // }, 200)
-      /* setTimeout(() => {
+      setTimeout(() => {
         this.converse()
-      }, 500) */
+      }, 500)
     },
     submit () {
       // Form submit
