@@ -63,7 +63,8 @@ nav {
   width: 100%;
   top: 0;
   left: 0;
-  padding: 0 1.5rem;
+  margin: 0 !important;
+  padding: 1.5rem;
   background-color: #1a1a1c;
 }
 section#devpanel {

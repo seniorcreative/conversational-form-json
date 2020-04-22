@@ -40,7 +40,7 @@ conversation tester</p>
       </div>
     </section>
     <!-- Conversation tool -->
-    <section id="conversations" v-show="showConversation">
+    <section id="conversations" _v-show="showConversation">
       <div class="columns">
         <div class="column is-8 is-offset-2" id="formTarget">
             <!-- <button type="button" class="button  is-dark" @click="clear()">&times;</button> -->
@@ -68,7 +68,7 @@ export default {
     showMenu: false,
     devMode: false,
     formIndex: 1,
-    schemaInternal: schema[0]
+    schemaInternal: schema
   }),
   methods: {
     converse () {
@@ -80,14 +80,14 @@ export default {
     setForm (index) {
       this.formIndex = index
       const scope = this
-      this.schemaInternal = schema[this.formIndex - 1]
+      this.schemaInternal = schema
       scope.$refs.formSchema.load(this.schemaInternal)
-      /* this.showMenu = false
+      this.showMenu = false
       this.showConversation = true
-      setTimeout(() => {
-        this.decorateForm()
-      }, 200)
-      setTimeout(() => {
+      // setTimeout(() => {
+      this.decorateForm()
+      // }, 200)
+      /* setTimeout(() => {
         this.converse()
       }, 500) */
     },
@@ -96,9 +96,29 @@ export default {
     },
     decorateForm () {
       window.jQuery('form').addClass('form has-text-left')
-      window.jQuery('input').wrap('<div class="control">')
-      window.jQuery('textarea').wrap('<div class="control">')
-      window.jQuery('select').wrap('<div class="control"><div class="select">')
+
+      if (window.jQuery('input').parent().is('.control')) {
+        window.jQuery('input').unwrap()
+      } else {
+        window.jQuery('input').wrap('<div class="control"></div>')
+      }
+
+      if (window.jQuery('textarea').parent().is('.control')) {
+        window.jQuery('textarea').unwrap()
+      } else {
+        window.jQuery('textarea').wrap('<div class="control"></div>')
+      }
+
+      if (window.jQuery('select').parent().is('.select')) {
+        window.jQuery('textarea').unwrap()
+      }
+
+      if (window.jQuery('select').parent().is('.control')) {
+        window.jQuery('select').unwrap()
+      } else {
+        window.jQuery('select').wrap('<div class="control"><div class="select"></div></div>')
+      }
+
       window.jQuery('label').css('color', 'grey')
       window.jQuery('div[data-fs-field-input]').addClass('field')
       window.jQuery('label').addClass('label')
@@ -127,11 +147,11 @@ export default {
   computed: {
     schemaProperties: {
       get () {
-        return JSON.stringify(schema[this.formIndex - 1].properties, null, 2)
+        return JSON.stringify(schema.properties, null, 2)
       },
       set (value) {
-        schema[this.formIndex - 1].properties = JSON.parse(value)
-        this.schemaInternal = schema[this.formIndex - 1]
+        schema.properties = JSON.parse(value)
+        this.schemaInternal = schema
         this.$refs.formSchema.load(this.schemaInternal)
       }
     }
