@@ -18,17 +18,29 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('./assets/main.scss');
 html, body {
-  color: #2c3e50;
-  background: #111;
   height: 100%;
 }
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Neue Haas Grotesk Display Pro', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-weight: 500;
   text-align: center;
-  padding-top: 5rem;
+  height: 100%;
+}
+section {
+  height: 90vh;
+  margin-top: 10vh;
+}
+.controls {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+}
+.columns {
   height: 100%;
 }
 </style>

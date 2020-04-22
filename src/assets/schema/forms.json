@@ -1,38 +1,52 @@
-{
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "title": "Conversational Form #1",
-    "description": "Start the conversation...",
-    "properties": {
-      "name": {
-        "type": "string",
-        "title": "What's your full name?"
-      },
-      "email": {
-        "type": "string",
-        "maxLength": 120,
-        "title": "And your email address?"
-      },
-      "lists": {
-        "type": "string",
-        "title": "Great. What list do you want to join?",
-        "enum": ["Daily New", "Promotion"]
-      },
-      "source": {
-        "type": "string",
-        "maxLength": 120,
-        "title": "Awesome. Can you please tell us how you heard about us?",
-        "description": "Ex. Using the NPM Search Engine"
-      },
-      "agree": {
-        "type": "boolean",
-        "title": "Lastly, do you agree for us to contact you using the supplied email address?",
-        "default": false,
-        "attrs": {
-          "type": "checkbox"
-        }
-      }
+[{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "Form #1",
+  "description": "",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "What's your full name?"
     },
-    "additionalProperties": false,
-    "required": ["name", "email", "lists"]
-  }
+    "email": {
+      "type": "string",
+      "maxLength": 120,
+      "title": "And your email address?"
+    },
+    "lists": {
+      "type": "string",
+      "title": "Great. What list do you want to join?",
+      "enum": ["Daily New", "Promotion"]
+    },
+    "source": {
+      "type": "string",
+      "maxLength": 120,
+      "title": "Awesome. Can you please tell us how you heard about us?",
+      "description": "Ex. Using the NPM Search Engine"
+    },
+    "agree": {
+      "type": "boolean",
+      "title": "Lastly, do you agree for us to contact you using the supplied email address?",
+      "default": false,
+      "attrs": {
+        "type": "checkbox"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": ["name", "email", "lists"]
+},
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "title": "Form #2",
+  "description": "",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "How good art thou?"
+    }
+  },
+  "additionalProperties": false,
+  "required": ["name"]
+}]

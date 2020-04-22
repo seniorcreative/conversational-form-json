@@ -1,31 +1,22 @@
 <template>
   <section>
-    <div class="has-text-left">
-      <button type="button" @click="toggleJSON()" class="button is-dark">Toggle JSON</button>
+    <div class="controls has-text-left">
+      <button type="button" @click="setForm(1)" class="button is-dark">Form 1</button>&nbsp;
+      <button type="button" @click="setForm(2)" class="button is-dark">Form 2</button>&nbsp;
+      <button type="button" @click="toggle('showCode')" class="button is-dark">Toggle Code</button>&nbsp;
+      <button type="button" @click="toggle('showForm')" class="button is-dark">Toggle Form</button>&nbsp;
+      <button type="button" class="button is-dark" @click="converse()">Start Conversation</button>
     </div>
     <br>
     <div class="columns">
       <div class="column has-text-left" v-show="showCode">
-        <textarea class="textarea high" v-model="schemaProperties"></textarea>
-        <!-- <vue-json-pretty
-          :data="schemaProperties"
-          @change="updateSchema">
-        </vue-json-pretty> -->
-        <!-- <JsonEditor
-            :options="{
-                confirmText: 'confirm',
-                cancelText: 'cancel',
-            }"
-            :objData="schemaProperties"
-            v-model="schemaProperties" >
-        </JsonEditor> -->
+        <textarea class="textarea code" v-model="schemaProperties"></textarea>
       </div>
-      <div class="column ">
+      <div class="column" v-show="showForm">
         <!-- <button type="button" class="button is-primary">Click</button> -->
         <FormSchema :schema="schemaInternal" v-model="model" @submit="submit" ref="formSchema">
           <button class="button is-primary" type="submit">Submit</button>
         </FormSchema>
-        <button type="button" class="button " @click="converse()">Start conversation</button>
       </div>
       <div class="column" id="formTarget">
           <button type="button" class="button  is-dark" @click="clear()">&times;</button>
@@ -36,11 +27,9 @@
 
 <script>
 // Reference https://gitlab.com/formschema/native
+import Vue from 'vue'
 import FormSchema from '@formschema/native'
 import schema from '../assets/schema/forms.json'
-// import VueJsonPretty from 'vue-json-pretty'
-// import $ from 'jquery'
-// import { ConversationalForm } from 'conversational-form'
 
 export default {
   name: 'Start',
@@ -48,34 +37,40 @@ export default {
     msg: String
   },
   data: () => ({
-    schemaInternal: schema,
     model: {},
-    showCode: true
+    showCode: true,
+    showForm: true,
+    showConversation: true,
+    formIndex: 1,
+    schemaInternal: schema[0]
   }),
   methods: {
-    submit (e) {
-      // this.model contains the valid data according your JSON Schema.
-      // You can submit your model to the server here
-      // console.log(JSON.stringify(this.model))
-    },
     converse () {
-      window.jQuery('form').conversationalForm({ context: document.getElementById('formTarget') })
+      window.jQuery('form').conversationalForm({ context: document.getElementById('formTarget'), theme: 'dark' })
     },
-    toggleJSON () {
-      this.showCode = !this.showCode
+    toggle (paramName) {
+      this[paramName] = !this[paramName]
     },
-    updateSchema (a, b) {
-      console.log('updating schema', a, b)
+    setForm (index) {
+      this.formIndex = index
+      const scope = this
+      this.schemaInternal = schema[this.formIndex - 1]
+      Vue.nextTick(() => {
+        scope.$refs.formSchema.load(this.schemaInternal)
+      })
+    },
+    submit () {
+      // Form submit
     }
   },
   computed: {
     schemaProperties: {
       get () {
-        return JSON.stringify(schema.properties, null, 2)
+        return JSON.stringify(schema[this.formIndex - 1].properties, null, 2)
       },
       set (value) {
-        schema.properties = JSON.parse(value)
-        this.schemaInternal.properties = schema.properties
+        schema[this.formIndex - 1].properties = JSON.parse(value)
+        this.schemaInternal = schema[this.formIndex - 1]
         this.$refs.formSchema.load(this.schemaInternal)
       }
     }
@@ -85,7 +80,6 @@ export default {
     // Run some jQuery on elements after a short wait to add bulma classes.
     setTimeout(() => {
       window.jQuery('form').addClass('form has-text-left')
-      // window.jQuery('form').attr('cf-form', true)
       window.jQuery('input').wrap('<div class="control">')
       window.jQuery('textarea').wrap('<div class="control">')
       window.jQuery('select').wrap('<div class="control"><div class="select">')
@@ -109,8 +103,8 @@ export default {
 form {
   text-align: left;
 }
-.high {
-  font-family:'Courier New', Courier, monospace;
+.code {
+  font-family: monospace;
   height: 100vh;
   width: 100%;
   margin: 0;
