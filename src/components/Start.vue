@@ -13,12 +13,14 @@
         <button type="button" class="button is-dark" @click="converse()">Start Conversation</button>
       </div>
     </nav>
+    <!-- Welcome -->
     <section id="intro" v-show="!showMenu && !devMode" class="intro  has-text-centered">
       <p>
         Welcome to the<br>
 <span>WorkSafe Victoria</span><br>
 conversation tester</p>
     </section>
+    <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
       <ul>
         <li><a @click="setForm(1)" >Conversation 1</a></li>
@@ -29,7 +31,7 @@ conversation tester</p>
     <section id="devpanel" v-show="showCode || showForm">
       <div class="columns">
         <div class="column has-text-left" v-show="showCode">
-          <textarea class="textarea code" v-model="schemaProperties"></textarea>
+          <textarea class="code" v-model="schemaProperties"></textarea>
         </div>
         <div class="column" v-show="showForm">
           <!-- <button type="button" class="button is-primary">Click</button> -->
@@ -40,12 +42,7 @@ conversation tester</p>
       </div>
     </section>
     <!-- Conversation tool -->
-    <section id="conversations" _v-show="showConversation">
-      <div class="columns">
-        <div class="column is-8 is-offset-2" id="formTarget">
-            <!-- <button type="button" class="button  is-dark" @click="clear()">&times;</button> -->
-        </div>
-      </div>
+    <section id="formTarget" style="height: 500px" _v-show="showConversation">
     </section>
   </div>
 </template>
@@ -68,7 +65,7 @@ export default {
     showMenu: false,
     devMode: false,
     formIndex: 1,
-    schemaInternal: schema
+    schemaInternal: schema[0]
   }),
   methods: {
     converse () {
@@ -80,10 +77,10 @@ export default {
     setForm (index) {
       this.formIndex = index
       const scope = this
-      this.schemaInternal = schema
+      this.schemaInternal = schema[this.formIndex - 1]
       scope.$refs.formSchema.load(this.schemaInternal)
       this.showMenu = false
-      this.showConversation = true
+      // this.showConversation = true
       // setTimeout(() => {
       this.decorateForm()
       // }, 200)
@@ -97,48 +94,48 @@ export default {
     decorateForm () {
       window.jQuery('form').addClass('form has-text-left')
 
-      if (window.jQuery('input').parent().is('.control')) {
-        window.jQuery('input').unwrap()
+      if (window.jQuery('.form input').parent().is('.control')) {
+        window.jQuery('.form input').unwrap()
       } else {
-        window.jQuery('input').wrap('<div class="control"></div>')
+        window.jQuery('.form input').wrap('<div class="control"></div>')
       }
 
-      if (window.jQuery('textarea').parent().is('.control')) {
-        window.jQuery('textarea').unwrap()
+      if (window.jQuery('.form textarea').parent().is('.control')) {
+        window.jQuery('.form textarea').unwrap()
       } else {
-        window.jQuery('textarea').wrap('<div class="control"></div>')
+        window.jQuery('.form textarea').wrap('<div class="control"></div>')
       }
 
-      if (window.jQuery('select').parent().is('.select')) {
-        window.jQuery('textarea').unwrap()
+      if (window.jQuery('.form select').parent().is('.select')) {
+        window.jQuery('.form textarea').unwrap()
       }
 
-      if (window.jQuery('select').parent().is('.control')) {
-        window.jQuery('select').unwrap()
+      if (window.jQuery('.form select').parent().is('.control')) {
+        window.jQuery('.form select').unwrap()
       } else {
-        window.jQuery('select').wrap('<div class="control"><div class="select"></div></div>')
+        window.jQuery('.form select').wrap('<div class="control"><div class="select"></div></div>')
       }
 
-      window.jQuery('label').css('color', 'grey')
-      window.jQuery('div[data-fs-field-input]').addClass('field')
-      window.jQuery('label').addClass('label')
-      window.jQuery('input').addClass('input')
-      window.jQuery('input[type="checkbox"').removeClass('input')
-      window.jQuery('textarea').addClass('textarea')
-      window.jQuery('select').addClass('select')
-      window.jQuery('div[data-fs-field]').addClass('field')
-      window.jQuery('div[id*="form-schema"] > h1').remove()
-      window.jQuery('div[id*="form-schema"] > p').remove()
+      window.jQuery('.form label').css('color', 'grey')
+      window.jQuery('.form div[data-fs-field-input]').addClass('field')
+      window.jQuery('.form label').addClass('label')
+      window.jQuery('.form input').addClass('input')
+      window.jQuery('.form input[type="checkbox"').removeClass('input')
+      window.jQuery('.form textarea').addClass('textarea')
+      window.jQuery('.form select').addClass('select')
+      window.jQuery('.form div[data-fs-field]').addClass('field')
+      window.jQuery('.form div[id*="form-schema"] > h1').remove()
+      window.jQuery('.form div[id*="form-schema"] > p').remove()
     },
     activateDev () {
       this.devMode = !this.devMode
-      // this.showMenu = false
-      // this.showCode = true
-      // this.showForm = true
+      this.showMenu = false
+      this.showCode = true
+      this.showForm = true
     },
     activateMenu () {
       this.showMenu = !this.showMenu
-      this.showConversation = false
+      // this.showConversation = false
     },
     deactivateMenu () {
       this.showMenu = false
@@ -147,11 +144,11 @@ export default {
   computed: {
     schemaProperties: {
       get () {
-        return JSON.stringify(schema.properties, null, 2)
+        return JSON.stringify(schema[this.formIndex - 1].properties, null, 2)
       },
       set (value) {
-        schema.properties = JSON.parse(value)
-        this.schemaInternal = schema
+        schema[this.formIndex - 1].properties = JSON.parse(value)
+        this.schemaInternal = schema[this.formIndex - 1]
         this.$refs.formSchema.load(this.schemaInternal)
       }
     }

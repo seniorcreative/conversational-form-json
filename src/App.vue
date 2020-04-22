@@ -54,9 +54,6 @@ a, button.plain {
 }
 .container {
   height: 100%;
-  div:first-of-type {
-    height: 100%;
-  }
 }
 nav {
   position: fixed;
