@@ -6,45 +6,27 @@
     "properties": {
       "name": {
         "type": "string",
-        "minLength": 8,
-        "maxLength": 80,
-        "title": "Full Name",
-        "attrs": {
-          "placeholder": "Your Full Name",
-          "title": "Please enter your full name"
-        }
+        "title": "What's your full name?"
       },
       "email": {
         "type": "string",
         "maxLength": 120,
-        "title": "Email",
-        "attrs": {
-          "type": "email",
-          "placeholder": "Your Email"
-        }
+        "title": "And your email address?"
       },
       "lists": {
         "type": "string",
-        "title": "List",
-        "enum": ["Daily New", "Promotion"],
-        "attrs": {
-          "placeholder": "Select your list subscription"
-        }
+        "title": "Great. What list do you want to join?",
+        "enum": ["Daily New", "Promotion"]
       },
       "source": {
         "type": "string",
         "maxLength": 120,
-        "title": "Source",
-        "description": "Ex. Using the NPM Search Engine",
-        "attrs": {
-          "type": "textarea",
-          "placeholder": "How did you hear about us?"
-        }
+        "title": "Awesome. Can you please tell us how you heard about us?",
+        "description": "Ex. Using the NPM Search Engine"
       },
       "agree": {
         "type": "boolean",
-        "title": "Agree",
-        "description": "You agree to receive occasional updates and special offers for vue-json-schema updates.",
+        "title": "Lastly, do you agree for us to contact you using the supplied email address?",
         "default": false,
         "attrs": {
           "type": "checkbox"
