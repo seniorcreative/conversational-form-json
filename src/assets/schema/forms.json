@@ -6,7 +6,7 @@
     "properties": {
       "name": {
         "type": "string",
-        "minLength": 8,
+        "minLength": 1,
         "maxLength": 80,
         "title": "Full Name",
         "attrs": {
@@ -62,11 +62,11 @@
     "properties": {
       "name": {
         "type": "string",
-        "minLength": 8,
+        "minLength": 1,
         "maxLength": 80,
-        "title": "How great art thou?",
+        "title": "How art thou?",
         "attrs": {
-          "placeholder": "How great art thou?",
+          "placeholder": "How art thou?",
           "title": ""
         }
       }

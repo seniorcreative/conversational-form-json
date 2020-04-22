@@ -48,7 +48,7 @@ a, button.plain {
   font-size: 1rem;
   transition: all 0.3s ease;
   font-family: inherit;
-  &:hover {
+  &:hover, &.active {
     color: #fdb813 !important;
   }
 }

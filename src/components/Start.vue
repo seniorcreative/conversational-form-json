@@ -2,7 +2,7 @@
   <div>
     <nav>
       <button type="button" class="plain" @click="activateMenu()">Menu</button>
-      <button type="button" class="plain" @click="activateDev()">Settings</button>
+      <button type="button" class="plain is-hidden" @click="activateDev()">Settings</button>
       <div v-show="showMenu" class="has-text-right"><a @click="deactivateMenu()"><strong>&nbsp;&times;&nbsp;</strong></a></div>
       <!-- Dev controls -->
       <div v-show="devMode">
@@ -23,8 +23,8 @@ conversation tester</p>
     <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
       <ul>
-        <li><a @click="setForm(1)" >Conversation 1</a></li>
-        <li><a @click="setForm(2)" >Conversation 2</a></li>
+        <li><a @click="setForm(1)" v-bind:class="{ active: formIndex == 1 }" >Conversation 1</a></li>
+        <li><a @click="setForm(2)" v-bind:class="{ active: formIndex == 2 }" >Conversation 2</a></li>
       </ul>
     </section>
     <!-- Dev panels -->
@@ -159,6 +159,9 @@ export default {
     setTimeout(() => {
       this.decorateForm()
     }, 100)
+    setTimeout(() => {
+      this.setForm(1)
+    }, 500)
   }
 }
 </script>
