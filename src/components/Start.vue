@@ -57,10 +57,29 @@ export default {
       this.schemaInternal = schema[this.formIndex - 1]
       Vue.nextTick(() => {
         scope.$refs.formSchema.load(this.schemaInternal)
+        setTimeout(() => {
+          this.decorateForm()
+        }, 100)
       })
     },
     submit () {
       // Form submit
+    },
+    decorateForm () {
+      window.jQuery('form').addClass('form has-text-left')
+      window.jQuery('input').wrap('<div class="control">')
+      window.jQuery('textarea').wrap('<div class="control">')
+      window.jQuery('select').wrap('<div class="control"><div class="select">')
+      window.jQuery('label').css('color', 'grey')
+      window.jQuery('div[data-fs-field-input]').addClass('field')
+      window.jQuery('label').addClass('label')
+      window.jQuery('input').addClass('input')
+      window.jQuery('input[type="checkbox"').removeClass('input')
+      window.jQuery('textarea').addClass('textarea')
+      window.jQuery('select').addClass('select')
+      window.jQuery('div[data-fs-field]').addClass('field')
+      window.jQuery('div[id*="form-schema"] > h1').remove()
+      window.jQuery('div[id*="form-schema"] > p').remove()
     }
   },
   computed: {
@@ -79,20 +98,7 @@ export default {
   mounted () {
     // Run some jQuery on elements after a short wait to add bulma classes.
     setTimeout(() => {
-      window.jQuery('form').addClass('form has-text-left')
-      window.jQuery('input').wrap('<div class="control">')
-      window.jQuery('textarea').wrap('<div class="control">')
-      window.jQuery('select').wrap('<div class="control"><div class="select">')
-      window.jQuery('label').css('color', 'grey')
-      window.jQuery('div[data-fs-field-input]').addClass('field')
-      window.jQuery('label').addClass('label')
-      window.jQuery('input').addClass('input')
-      window.jQuery('input[type="checkbox"').removeClass('input')
-      window.jQuery('textarea').addClass('textarea')
-      window.jQuery('select').addClass('select')
-      window.jQuery('div[data-fs-field]').addClass('field')
-      window.jQuery('div[id*="form-schema"] > h1').remove()
-      window.jQuery('div[id*="form-schema"] > p').remove()
+      this.decorateForm()
     }, 100)
   }
 }
