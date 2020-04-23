@@ -1,0 +1,48 @@
+{
+  "form": [
+    {
+      "type": "fieldSet",
+      "elements": [
+        {
+          "type": "label",
+          "elements": [
+            {
+              "type": "span",
+              "value": "Yes"
+            },
+            {
+              "type": "input",
+              "attrs": {
+                "id": "input-1",
+                "name": "first_input",
+                "value": "stuck underwater",
+                "cf-questions": "What is your name?"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "fieldSet",
+      "elements": [
+        {
+          "type": "input",
+          "attrs": {
+            "id": "input-2",
+            "name": "second_input",
+            "value": "looping funny"
+          }
+        }
+      ]
+    },
+    {
+        "type": "textarea",
+        "value": "text area",
+        "attrs": {
+            "name": "textarea-1",
+            "rows": 3
+        }
+    }
+  ]
+}

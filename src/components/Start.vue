@@ -28,7 +28,7 @@ conversation tester</p>
       </ul>
     </section>
     <!-- Dev panels -->
-    <section id="devpanel" class="is-invisible" _v-show="showCode || showForm">
+    <section id="devpanel" _class="is-invisible" _v-show="showCode || showForm">
       <div class="columns">
         <div class="column has-text-left" _v-show="showCode">
           <textarea class="code" v-model="schemaProperties"></textarea>
@@ -36,7 +36,7 @@ conversation tester</p>
         <div class="column" _v-show="showForm">
           <!-- <button type="button" class="button is-primary">Click</button> -->
           <FormSchema :schema="schemaInternal" v-model="model" @submit="submit" ref="formSchema">
-            <button class="button is-primary" type="submit">Submit</button>
+            <!-- <button class="button is-primary" type="button">Submit</button> -->
           </FormSchema>
         </div>
       </div>

@@ -1,4 +1,25 @@
-[{
+[
+  {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Conversational Form #2",
+    "description": "Conversation 2",
+    "properties": {
+      "mood": {
+        "type": "string",
+        "enum": [
+          { "value": "one", "label": "one" },
+          { "value": "two", "label": "two" }
+        ],
+        "attrs": {
+          "type": "radio"
+        }
+      }
+    },
+    "additionalProperties": false,
+    "required": ["mood"]
+  },
+  {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "title": "Conversational Form #1",
@@ -53,25 +74,5 @@
     },
     "additionalProperties": false,
     "required": ["name", "email", "lists"]
-  },
-  {
-    "$schema": "http://json-schema.org/draft-04/schema#",
-    "type": "object",
-    "title": "Conversational Form #2",
-    "description": "Conversation 2",
-    "properties": {
-      "name": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 80,
-        "title": "How art thou?",
-        "attrs": {
-          "placeholder": "How art thou?",
-          "title": ""
-        }
-      }
-    },
-    "additionalProperties": false,
-    "required": ["name"]
   }
 ]

@@ -1,18 +1,21 @@
 <template>
   <div id="app">
     <section class="container">
-      <Start msg="Conversational Form Experiment"/>
+      <DynamicTemplate></DynamicTemplate>
+      <!-- <Start msg="Conversational Form Experiment"/> -->
     </section>
   </div>
 </template>
 
 <script>
 import Start from './components/Start.vue'
+import DynamicTemplate from './components/dynamictemplate'
 
 export default {
   name: 'App',
   components: {
-    Start
+    // Start,
+    DynamicTemplate
   }
 }
 </script>
@@ -66,8 +69,11 @@ nav {
 }
 section#devpanel {
   position: fixed;
-  top: -9999px;
-  left: -9999px;
+  width: 100%;
+  top: 0;
+  left: 0;
+  // top: -9999px;
+  // left: -9999px;
 }
 section#intro {
   padding-top: 6rem;
