@@ -42,7 +42,7 @@ conversation tester</p>
       </div>
     </section>
     <!-- Conversation tool -->
-    <section id="formTarget" _v-show="showConversation">
+    <section id="formTarget" v-show="!showMenu">
     </section>
   </div>
 </template>

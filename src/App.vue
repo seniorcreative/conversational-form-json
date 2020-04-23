@@ -73,8 +73,8 @@ section#intro {
   padding-top: 6rem;
   p {
     color: #fff;
-    font-size: 2rem;
-    line-height: 1.25;
+    font-size: 3rem;
+    line-height: 1.1;
     span {
       color: rgba(255,255,255, 0.5);
     }
@@ -88,8 +88,8 @@ section#menu {
   justify-content: center;
 }
 section#formTarget {
-  height: calc(100vh - 200px);
-  margin: 0 10rem;
+  height: calc(100vh - 300px);
+  margin: 0 15rem;
 }
 nav {
   margin: 1rem 0;
@@ -113,5 +113,8 @@ form {
 }
 .intro {
   padding: 2rem 0;
+}
+.conversational-form--show {
+  border-radius: 1rem;
 }
 </style>
