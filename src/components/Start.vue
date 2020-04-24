@@ -88,18 +88,49 @@ export default {
       // console.log('row', row)
       // console.log('row Selectors / Input type', row['Selectors / Input type'])
       row['Selectors / Input type'] = row['Selectors / Input type'].split(', ')
-      const inputObj = {
-        type: 'input',
-        attrs: {
-          id: `input-${i}`,
-          name: `input-${i}`,
-          'cf-questions': row['Question / Content']
-        }
+      // console.log('row selectors before', row['Selectors / Input type'])
+      const rebuildAnswers = []
+      for (const a in row['Selectors / Input type']) {
+        const answer = row['Selectors / Input type'][a]
+        console.log(`a ${a}, answer ${answer}`)
+        rebuildAnswers.push(
+          {
+            type: 'input',
+            attrs: {
+              type: 'radio',
+              value: answer,
+              name: `answer-${i}`,
+              id: `answer-${i}-${a}`
+            }
+          })
+        rebuildAnswers.push(
+          {
+            type: 'label',
+            attrs: {
+              for: `answer-${i}-${a}`
+            },
+            elements: [
+              {
+                type: 'span',
+                value: answer
+              }
+            ]
+          }
+        )
       }
-      data.form.push(inputObj)
+      row['Selectors / Input type'] = rebuildAnswers
+      console.log('row selectors after', row['Selectors / Input type'])
+      const element = {
+        type: 'fieldset',
+        attrs: {
+          'cf-questions': row['Question / Content']
+        },
+        elements: row['Selectors / Input type']
+      }
+      data.form.push(element)
     })
     this.csvData.data.push(data)
-    // console.log('made form data', this.csvData.data[0])
+    console.log('made form data', this.csvData.data[0])
     // console.log('Got your CSV', csv)
     this.templateData = this.csvData.data[this.formIndex - 1]
     setTimeout(() => {
