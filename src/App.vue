@@ -1,21 +1,18 @@
 <template>
   <div id="app">
     <section class="container">
-      <DynamicTemplate></DynamicTemplate>
-      <!-- <Start msg="Conversational Form Experiment"/> -->
+      <Start msg="Conversational Form Experiment"/>
     </section>
   </div>
 </template>
 
 <script>
 import Start from './components/Start.vue'
-import DynamicTemplate from './components/dynamictemplate'
 
 export default {
   name: 'App',
   components: {
-    // Start,
-    DynamicTemplate
+    Start
   }
 }
 </script>
@@ -70,10 +67,8 @@ nav {
 section#devpanel {
   position: fixed;
   width: 100%;
-  top: 0;
-  left: 0;
-  // top: -9999px;
-  // left: -9999px;
+  top: -9999px;
+  left: -9999px;
 }
 section#intro {
   padding-top: 6rem;
@@ -93,9 +88,8 @@ section#menu {
   align-items: center;
   justify-content: center;
 }
-section#formTarget {
+#formTarget {
   height: calc(100vh - 300px);
-  margin: 0 15rem;
 }
 nav {
   margin: 1rem 0;
@@ -122,5 +116,11 @@ form {
 }
 .conversational-form--show {
   border-radius: 1rem;
+}
+a.btn-close {
+  display: inline-block;
+  background: url('./assets/close-icon.svg') no-repeat center center;
+  width: 24px;
+  height: 24px;
 }
 </style>

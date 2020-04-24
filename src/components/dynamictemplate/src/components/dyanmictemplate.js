@@ -1,13 +1,10 @@
 
-import templateJson from '../../../../assets/schema/template.json'
-
 export default {
   name: 'DynamicTemplate',
   components: {},
-  props: [],
+  props: ['templateData'],
   data () {
     return {
-      templateData: templateJson
     }
   },
   computed: {

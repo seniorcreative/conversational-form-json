@@ -1,106 +1,222 @@
 {
-  "form": [
+  "data": [
     {
-      "type": "fieldSet",
-      "elements": [
+      "form": [
         {
-          "type": "label",
+          "type": "fieldSet",
           "elements": [
             {
-              "type": "span",
-              "value": "Yes"
-            },
+              "type": "label",
+              "elements": [
+                {
+                  "type": "span",
+                  "value": "Yes"
+                },
+                {
+                  "type": "input",
+                  "attrs": {
+                    "id": "input-1",
+                    "name": "first_input",
+                    "value": "",
+                    "cf-questions": "Where art thou?"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "elements": [
             {
               "type": "input",
               "attrs": {
-                "id": "input-1",
-                "name": "first_input",
-                "value": "stuck underwater",
-                "cf-questions": "What is your name?"
+                "id": "input-2",
+                "name": "second_input",
+                "value": "",
+                "cf-questions": "What are you doing?"
               }
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "fieldSet",
-      "elements": [
+        },
         {
-          "type": "input",
+          "type": "fieldSet",
+          "elements": [
+            {
+              "type": "label",
+              "elements": [
+                {
+                  "type": "span",
+                  "value": "a"
+                },
+                {
+                  "type": "input",
+                  "attrs": {
+                    "id": "input-a",
+                    "type": "radio",
+                    "name": "question-1",
+                    "value": "a"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "label",
+              "elements": [
+                {
+                  "type": "span",
+                  "value": "b"
+                },
+                {
+                  "type": "input",
+                  "attrs": {
+                    "id": "input-b",
+                    "type": "radio",
+                    "name": "question-1",
+                    "value": "b"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "label",
+              "elements": [
+                {
+                  "type": "span",
+                  "value": "c"
+                },
+                {
+                  "type": "input",
+                  "attrs": {
+                    "id": "input-c",
+                    "type": "radio",
+                    "name": "question-1",
+                    "value": "c"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "textarea",
+          "value": "",
           "attrs": {
-            "id": "input-2",
-            "name": "second_input",
-            "value": "looping funny"
+            "name": "textarea-1",
+            "rows": 3,
+            "cf-questions": "Please give us a bit more information"
           }
         }
       ]
     },
     {
-        "type": "textarea",
-        "value": "text area",
-        "attrs": {
-            "name": "textarea-1",
-            "rows": 3
-        }
-    },
-    {
-        "type": "fieldSet",
-        "elements": [
+      "form": [
+        {
+          "type": "fieldSet",
+          "elements": [
             {
-                "type": "label",
-                "elements": [
-                    {
-                        "type": "span",
-                        "value": "a"
-                    },
-                    {
-                        "type": "input",
-                        "attrs": {
-                          "id": "input-a",
-                          "type": "radio",
-                          "name": "question-1",
-                          "value": "a"
-                        }
-                      }
-                ]
+              "type": "label",
+              "elements": [
+                {
+                  "type": "span",
+                  "value": "Yes"
+                },
+                {
+                  "type": "input",
+                  "attrs": {
+                    "id": "input-1",
+                    "name": "first_input",
+                    "value": "",
+                    "cf-questions": "Are you feeling good today?"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "elements": [
+            {
+              "type": "input",
+              "attrs": {
+                "id": "input-2",
+                "name": "second_input",
+                "value": "",
+                "cf-questions": "What are you doing?"
+              }
+            }
+          ]
+        },
+        {
+          "type": "fieldSet",
+          "elements": [
+            {
+              "type": "label",
+              "elements": [
+                {
+                  "type": "span",
+                  "value": "a"
+                },
+                {
+                  "type": "input",
+                  "attrs": {
+                    "id": "input-a",
+                    "type": "radio",
+                    "name": "question-1",
+                    "value": "a"
+                  }
+                }
+              ]
             },
             {
-                "type": "label",
-                "elements": [
-                    {
-                        "type": "span",
-                        "value": "b"
-                    },
-                    {
-                        "type": "input",
-                        "attrs": {
-                          "id": "input-b",
-                          "type": "radio",
-                          "name": "question-1",
-                          "value": "b"
-                        }
-                      }
-                ]
-            },{
-                "type": "label",
-                "elements": [
-                    {
-                        "type": "span",
-                        "value": "c"
-                    },
-                    {
-                        "type": "input",
-                        "attrs": {
-                          "id": "input-c",
-                          "type": "radio",
-                          "name": "question-1",
-                          "value": "c"
-                        }
-                      }
-                ]
+              "type": "label",
+              "elements": [
+                {
+                  "type": "span",
+                  "value": "b"
+                },
+                {
+                  "type": "input",
+                  "attrs": {
+                    "id": "input-b",
+                    "type": "radio",
+                    "name": "question-1",
+                    "value": "b"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "label",
+              "elements": [
+                {
+                  "type": "span",
+                  "value": "c"
+                },
+                {
+                  "type": "input",
+                  "attrs": {
+                    "id": "input-c",
+                    "type": "radio",
+                    "name": "question-1",
+                    "value": "c"
+                  }
+                }
+              ]
             }
-        ]
-      }
+          ]
+        },
+        {
+          "type": "textarea",
+          "value": "",
+          "attrs": {
+            "name": "textarea-1",
+            "rows": 3,
+            "cf-questions": "Please give us a bit more information"
+          }
+        }
+      ]
+    }
   ]
 }

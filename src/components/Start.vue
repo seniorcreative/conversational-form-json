@@ -2,19 +2,10 @@
   <div>
     <nav>
       <button type="button" class="plain" @click="activateMenu()">Menu</button>
-      <button type="button" class="plain is-hidden" @click="activateDev()">Settings</button>
-      <div v-show="showMenu" class="has-text-right"><a @click="deactivateMenu()"><strong>&nbsp;&times;&nbsp;</strong></a></div>
-      <!-- Dev controls -->
-      <div v-show="devMode">
-        <button type="button" class="button is-dark" @click="setForm(1)" >Form 1</button>&nbsp;
-        <button type="button" class="button is-dark" @click="setForm(2)" >Form 2</button>&nbsp;
-        <button type="button" @click="toggle('showCode')" class="button is-dark">Toggle Code</button>&nbsp;
-        <button type="button" @click="toggle('showForm')" class="button is-dark">Toggle Form</button>&nbsp;
-        <button type="button" class="button is-dark" @click="converse()">Start Conversation</button>
-      </div>
+      <div v-show="showMenu" class="has-text-right"><a @click="deactivateMenu()" class="btn-close"></a></div>
     </nav>
     <!-- Welcome -->
-    <section id="intro" v-show="!showMenu && !devMode" class="intro  has-text-centered">
+    <section id="intro" v-show="!showMenu" class="intro  has-text-centered">
       <p>
         Welcome to the<br>
 <span>WorkSafe Victoria</span><br>
@@ -28,45 +19,37 @@ conversation tester</p>
       </ul>
     </section>
     <!-- Dev panels -->
-    <section id="devpanel" _class="is-invisible" _v-show="showCode || showForm">
+    <section id="devpanel" class="is-invisible">
       <div class="columns">
-        <div class="column has-text-left" _v-show="showCode">
-          <textarea class="code" v-model="schemaProperties"></textarea>
-        </div>
-        <div class="column" _v-show="showForm">
-          <!-- <button type="button" class="button is-primary">Click</button> -->
-          <FormSchema :schema="schemaInternal" v-model="model" @submit="submit" ref="formSchema">
-            <!-- <button class="button is-primary" type="button">Submit</button> -->
-          </FormSchema>
+        <div class="column">
+          <DynamicTemplate :templateData="templateData"></DynamicTemplate>
         </div>
       </div>
     </section>
     <!-- Conversation tool -->
-    <section id="formTarget" v-show="!showMenu">
-    </section>
+    <div class="columns" v-show="!showMenu">
+      <div class="column is-8 is-offset-2" id="formTarget">
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// Reference https://gitlab.com/formschema/native
-import FormSchema from '@formschema/native'
-import schema from '../assets/schema/forms.json'
+import DynamicTemplate from './dynamictemplate'
+import templateJson from '../assets/schema/template.json'
 
 export default {
   name: 'Start',
   props: {
     msg: String
   },
-  data: () => ({
-    model: {},
-    showCode: false,
-    showForm: false,
-    showConversation: true,
-    showMenu: false,
-    devMode: false,
-    formIndex: 1,
-    schemaInternal: schema[0]
-  }),
+  data () {
+    return {
+      showMenu: false,
+      formIndex: 1,
+      templateData: templateJson.data[0]
+    }
+  },
   methods: {
     converse () {
       window.jQuery('form').conversationalForm({ context: document.getElementById('formTarget'), theme: 'dark' })
@@ -76,14 +59,8 @@ export default {
     },
     setForm (index) {
       this.formIndex = index
-      const scope = this
-      this.schemaInternal = schema[this.formIndex - 1]
-      scope.$refs.formSchema.load(this.schemaInternal)
+      this.templateData = templateJson.data[this.formIndex - 1]
       this.showMenu = false
-      // this.showConversation = true
-      // setTimeout(() => {
-      // this.decorateForm()
-      // }, 200)
       setTimeout(() => {
         this.converse()
       }, 500)
@@ -91,74 +68,17 @@ export default {
     submit () {
       // Form submit
     },
-    decorateForm () {
-      window.jQuery('form').addClass('form has-text-left')
-
-      if (window.jQuery('.form input').parent().is('.control')) {
-        window.jQuery('.form input').unwrap()
-      } else {
-        window.jQuery('.form input').wrap('<div class="control"></div>')
-      }
-
-      if (window.jQuery('.form textarea').parent().is('.control')) {
-        window.jQuery('.form textarea').unwrap()
-      } else {
-        window.jQuery('.form textarea').wrap('<div class="control"></div>')
-      }
-
-      if (window.jQuery('.form select').parent().is('.select')) {
-        window.jQuery('.form textarea').unwrap()
-      }
-
-      if (window.jQuery('.form select').parent().is('.control')) {
-        window.jQuery('.form select').unwrap()
-      } else {
-        window.jQuery('.form select').wrap('<div class="control"><div class="select"></div></div>')
-      }
-
-      window.jQuery('.form label').css('color', 'grey')
-      window.jQuery('.form div[data-fs-field-input]').addClass('field')
-      window.jQuery('.form label').addClass('label')
-      window.jQuery('.form input').addClass('input')
-      window.jQuery('.form input[type="checkbox"').removeClass('input')
-      window.jQuery('.form textarea').addClass('textarea')
-      window.jQuery('.form select').addClass('select')
-      window.jQuery('.form div[data-fs-field]').addClass('field')
-      window.jQuery('.form div[id*="form-schema"] > h1').remove()
-      window.jQuery('.form div[id*="form-schema"] > p').remove()
-    },
-    activateDev () {
-      this.devMode = !this.devMode
-      this.showMenu = false
-      this.showCode = true
-      this.showForm = true
-    },
     activateMenu () {
       this.showMenu = !this.showMenu
-      // this.showConversation = false
     },
     deactivateMenu () {
       this.showMenu = false
     }
   },
   computed: {
-    schemaProperties: {
-      get () {
-        return JSON.stringify(schema[this.formIndex - 1].properties, null, 2)
-      },
-      set (value) {
-        schema[this.formIndex - 1].properties = JSON.parse(value)
-        this.schemaInternal = schema[this.formIndex - 1]
-        this.$refs.formSchema.load(this.schemaInternal)
-      }
-    }
   },
-  components: { FormSchema },
+  components: { DynamicTemplate },
   mounted () {
-    // Run some jQuery on elements after a short wait to add bulma classes.
-    setTimeout(() => {
-      this.decorateForm()
-    }, 100)
     setTimeout(() => {
       this.setForm(1)
     }, 500)
