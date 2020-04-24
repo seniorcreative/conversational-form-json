@@ -1,0 +1,9 @@
+Question / Content,Selectors / Input type,Logic
+"We will need some introductory content at the start of each flow, to explain the context",Let's go,
+How would you describe the injury you are requesting support for? ,"A physical injury, A psychological injury, Both","4,5,4"
+Did the injury happen on a specific date or did it occur over a period of time? ,"Specific date, Over a period of time",
+"How did your injury occur? Tell us about what you were doing, who you were with and how it happened. You can describe these events in as much detail as you wish.",Free text entry,
+When do you think you might be able to return to work?,"I am already back at work, Within a week, 1 to 2 weeks, 2-4 weeks, 1 to 2 months, Longer than 2 months, Unsure, I am not ready to think about returning to work",
+Have you spoken with your employer about making a WorkCover claim?,"Yes, No","8,9"
+Who did you report your injury to?,Free text entry,
+Do you need help communicating with your employer on your behalf (or in consultation with you)?,"Yes, No",
