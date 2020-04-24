@@ -36,7 +36,8 @@ conversation tester</p>
 
 <script>
 import DynamicTemplate from './dynamictemplate'
-import templateJson from '../assets/schema/template.json'
+// import templateJson from '../assets/schema/template.json'
+import csv from '../assets/csv/sheet1.csv'
 
 export default {
   name: 'Start',
@@ -47,7 +48,9 @@ export default {
     return {
       showMenu: false,
       formIndex: 1,
-      templateData: templateJson.data[0]
+      // templateData: templateJson.data[0]
+      templateData: {},
+      csvData: { data: [] }
     }
   },
   methods: {
@@ -59,7 +62,7 @@ export default {
     },
     setForm (index) {
       this.formIndex = index
-      this.templateData = templateJson.data[this.formIndex - 1]
+      this.templateData = this.csvData.data[this.formIndex - 1]
       this.showMenu = false
       setTimeout(() => {
         this.converse()
@@ -79,6 +82,26 @@ export default {
   },
   components: { DynamicTemplate },
   mounted () {
+    //
+    const data = { form: [] }
+    csv.map((row, i) => {
+      // console.log('row', row)
+      // console.log('row Selectors / Input type', row['Selectors / Input type'])
+      row['Selectors / Input type'] = row['Selectors / Input type'].split(', ')
+      const inputObj = {
+        type: 'input',
+        attrs: {
+          id: `input-${i}`,
+          name: `input-${i}`,
+          'cf-questions': row['Question / Content']
+        }
+      }
+      data.form.push(inputObj)
+    })
+    this.csvData.data.push(data)
+    // console.log('made form data', this.csvData.data[0])
+    // console.log('Got your CSV', csv)
+    this.templateData = this.csvData.data[this.formIndex - 1]
     setTimeout(() => {
       this.setForm(1)
     }, 500)

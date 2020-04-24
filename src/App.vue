@@ -54,6 +54,9 @@ a, button.plain {
 }
 .container {
   height: 100%;
+  @media (max-width: 768px) {
+    padding: 0 1.5rem;
+  }
 }
 nav {
   position: fixed;
@@ -78,6 +81,10 @@ section#intro {
     line-height: 1.1;
     span {
       color: rgba(255,255,255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
     }
   }
 }
