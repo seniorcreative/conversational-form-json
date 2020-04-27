@@ -8,8 +8,8 @@
     <section id="intro" v-show="!showMenu" class="intro  has-text-centered">
       <p>
         Welcome to the<br>
-<span>WorkSafe Victoria</span><br>
-conversation tester</p>
+        <span>WorkSafe Victoria</span><br>
+        conversation tester</p>
     </section>
     <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
@@ -17,14 +17,6 @@ conversation tester</p>
         <li><a @click="setForm(1)" v-bind:class="{ active: formIndex == 1 }" >Conversation 1</a></li>
         <li><a @click="setForm(2)" v-bind:class="{ active: formIndex == 2 }" >Conversation 2</a></li>
       </ul>
-    </section>
-    <!-- Dev panels -->
-    <section id="devpanel" class="is-invisible">
-      <div class="columns">
-        <div class="column">
-          <DynamicTemplate :templateData="templateData"></DynamicTemplate>
-        </div>
-      </div>
     </section>
     <!-- Conversation tool -->
     <div class="columns" v-show="!showMenu">
@@ -35,9 +27,10 @@ conversation tester</p>
 </template>
 
 <script>
-import DynamicTemplate from './dynamictemplate'
-// import templateJson from '../assets/schema/template.json'
-import csv from '../assets/csv/sheet1.csv'
+import axios from 'axios'
+// import DynamicTemplate from './dynamictemplate'
+// You need the CSV loader in the vue.config to read the file below!
+// import csv from '../assets/csv/sheet1.csv'
 
 export default {
   name: 'Start',
@@ -50,12 +43,14 @@ export default {
       formIndex: 1,
       // templateData: templateJson.data[0]
       templateData: {},
-      csvData: { data: [] }
+      formData: {}
     }
   },
   methods: {
     converse () {
-      window.jQuery('form').conversationalForm({ context: document.getElementById('formTarget'), theme: 'dark' })
+      // window.jQuery('form').conversationalForm({ context: document.getElementById('formTarget'), theme: 'dark' })
+      const cf = window.cf.ConversationalForm.startTheConversation(this.formData)
+      // cf.addRobotChatResponse('Thank you for participating.')
     },
     toggle (paramName) {
       this[paramName] = !this[paramName]
@@ -76,66 +71,61 @@ export default {
     },
     deactivateMenu () {
       this.showMenu = false
+    },
+    formatJSONAsTags (data) {
+      const tags = []
+      for (let q = 0; q < data.length; q++) {
+        const tagObj = {}
+        const answers = data[q]['Selectors / Input type'].split(', ')
+        tagObj['cf-questions'] = data[q]['Question / Content']
+        tagObj.name = `q-${q}`
+        if (answers[0].toLowerCase() === 'text') {
+          tagObj.tag = 'input'
+          tagObj.type = 'text'
+          tagObj.rows = 3
+        } else {
+          tagObj.tag = 'label'
+          tagObj.children = []
+          for (let a = 0; a < answers.length; a++) {
+            const aTag = {}
+            aTag.tag = 'input'
+            aTag.type = 'radio'
+            aTag.name = `q-${q}`
+            aTag.id = `q-${q}-a-${a}`
+            aTag['cf-label'] = answers[a]
+            tagObj.children.push(aTag)
+          }
+        }
+
+        tags.push(tagObj)
+      }
+      const userInterfaceOptions = {
+        controlElementsInAnimationDelay: 250,
+        robot: {
+          robotResponseTime: 2000,
+          chainedResponseTime: 500
+        },
+        user: {
+          showThinking: false,
+          showThumb: false
+        }
+      }
+      const options = { context: document.getElementById('formTarget'), theme: 'dark', showProgressBar: true, userInterfaceOptions }
+      this.formData = { options, tags }
+      this.converse()
     }
   },
   computed: {
   },
-  components: { DynamicTemplate },
   mounted () {
-    //
-    const data = { form: [] }
-    csv.map((row, i) => {
-      // console.log('row', row)
-      // console.log('row Selectors / Input type', row['Selectors / Input type'])
-      row['Selectors / Input type'] = row['Selectors / Input type'].split(', ')
-      // console.log('row selectors before', row['Selectors / Input type'])
-      const rebuildAnswers = []
-      for (const a in row['Selectors / Input type']) {
-        const answer = row['Selectors / Input type'][a]
-        console.log(`a ${a}, answer ${answer}`)
-        rebuildAnswers.push(
-          {
-            type: 'input',
-            attrs: {
-              type: 'radio',
-              value: answer,
-              name: `answer-${i}`,
-              id: `answer-${i}-${a}`
-            }
-          })
-        rebuildAnswers.push(
-          {
-            type: 'label',
-            attrs: {
-              for: `answer-${i}-${a}`
-            },
-            elements: [
-              {
-                type: 'span',
-                value: answer
-              }
-            ]
-          }
-        )
+    // Load in the json via axios
+    axios
+      .get('https://sheetsu.com/apis/v1.0su/a75350b2f458')
+      .then(response => {
+        this.formatJSONAsTags(response.data)
+        // this.formData = response
       }
-      row['Selectors / Input type'] = rebuildAnswers
-      console.log('row selectors after', row['Selectors / Input type'])
-      const element = {
-        type: 'fieldset',
-        attrs: {
-          'cf-questions': row['Question / Content']
-        },
-        elements: row['Selectors / Input type']
-      }
-      data.form.push(element)
-    })
-    this.csvData.data.push(data)
-    console.log('made form data', this.csvData.data[0])
-    // console.log('Got your CSV', csv)
-    this.templateData = this.csvData.data[this.formIndex - 1]
-    setTimeout(() => {
-      this.setForm(1)
-    }, 500)
+      )
   }
 }
 </script>
