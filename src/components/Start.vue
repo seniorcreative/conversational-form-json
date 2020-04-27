@@ -78,27 +78,41 @@ export default {
         const tagObj = {}
         const answers = data[q]['Selectors / Input type'].split(', ')
         tagObj['cf-questions'] = data[q]['Question / Content']
-        tagObj.name = `q-${q}`
         if (answers[0].toLowerCase() === 'text') {
+          tagObj.name = `cfc-${q}`
           tagObj.tag = 'input'
           tagObj.type = 'text'
           tagObj.rows = 3
         } else {
-          tagObj.tag = 'label'
+          tagObj.tag = 'fieldset'
           tagObj.children = []
           for (let a = 0; a < answers.length; a++) {
             const aTag = {}
             aTag.tag = 'input'
             aTag.type = 'radio'
-            aTag.name = `q-${q}`
-            aTag.id = `q-${q}-a-${a}`
+            aTag.name = `cfc-step${q}`
+            aTag.id = `cfc-${q}-a-${a}`
             aTag['cf-label'] = answers[a]
+            aTag.value = answers[a]
             tagObj.children.push(aTag)
           }
         }
 
         tags.push(tagObj)
       }
+      // Loop again and add logic
+      for (let q = 0; q < data.length; q++) {
+        const answers = data[q]['Selectors / Input type'].split(', ')
+        const logic = data[q].Logic.split(',')
+        if (logic.length > 1 && q > 0) {
+          // Jump ahead in time and add the conditionals to subsequent questions
+          for (let l = 0; l < logic.length; l++) {
+            const goto = parseInt(logic[l]) - 2
+            tags[goto].children.map(c => (c[`cf-conditional-cfc-step${q}`] = answers[l]))
+          }
+        }
+      }
+
       const userInterfaceOptions = {
         controlElementsInAnimationDelay: 250,
         robot: {
@@ -123,7 +137,6 @@ export default {
       .get('https://sheetsu.com/apis/v1.0su/a75350b2f458')
       .then(response => {
         this.formatJSONAsTags(response.data)
-        // this.formData = response
       }
       )
   }
