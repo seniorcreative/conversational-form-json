@@ -41,12 +41,14 @@ export default {
       formIndex: 1,
       // templateData: templateJson.data[0]
       templateData: {},
-      formData: {}
+      formData: {},
+      cf: null,
+      gaCategory: 'CF Tool - Worksafe Conversation Tester'
     }
   },
   methods: {
     converse () {
-      const cf = ConversationalForm.startTheConversation(this.formData)
+      this.cf = ConversationalForm.startTheConversation(this.formData)
     },
     toggle (paramName) {
       this[paramName] = !this[paramName]
@@ -72,10 +74,11 @@ export default {
       const tags = []
       for (let q = 0; q < data.length; q++) {
         const tagObj = {}
+        const step = q + 1
         const answers = data[q]['Selectors / Input type'].split(', ')
         tagObj['cf-questions'] = data[q]['Question / Content']
         if (answers[0].toLowerCase() === 'text') {
-          tagObj.name = `cfc-${q}`
+          tagObj.name = `cfc-${step}`
           tagObj.tag = 'input'
           tagObj.type = 'text'
           tagObj.rows = 3
@@ -86,8 +89,8 @@ export default {
             const aTag = {}
             aTag.tag = 'input'
             aTag.type = 'radio'
-            aTag.name = `cfc-step${q}`
-            aTag.id = `cfc-${q}-a-${a}`
+            aTag.name = `cfc-question-${step}`
+            aTag.id = `cfc-${step}-a-${a}`
             aTag['cf-label'] = answers[a]
             aTag.value = answers[a]
             tagObj.children.push(aTag)
@@ -99,12 +102,13 @@ export default {
       // Loop again and add logic
       for (let q = 0; q < data.length; q++) {
         const answers = data[q]['Selectors / Input type'].split(', ')
+        const step = q + 1
         const logic = data[q].Logic.split(',')
         if (logic.length > 1 && q > 0) {
           // Jump ahead in time and add the conditionals to subsequent questions
           for (let l = 0; l < logic.length; l++) {
             const goto = parseInt(logic[l]) - 2
-            tags[goto].children.map(c => (c[`cf-conditional-cfc-step${q}`] = answers[l]))
+            tags[goto].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers[l]))
           }
         }
       }
@@ -125,17 +129,53 @@ export default {
         theme: 'dark',
         showProgressBar: true,
         userInterfaceOptions,
-        // submitCallback: this.submitCallback,
-        preventAutoFocus: true
+        submitCallback: this.submitCallback,
+        preventAutoFocus: true,
+        flowStepCallback: this.flowStepCallback
       }
       this.formData = { options, tags }
       this.converse()
+    },
+    flowStepCallback (dto, success, error) {
+      const currentStep = this.cf.flowManager.getStep() + 1 // Steps are 0-based so we add 1
+      const maxSteps = this.cf.flowManager.maxSteps // This value is not 0-based
+      const gaAction = `Step ${currentStep}/${maxSteps}`
+      const gaLabel = `Field name - ${dto.tag.name}` // We only track actual field name for reference purpose. If you want to track the actual value you may do so.
+
+      /*       console.log(
+        `tag script: ${window.gtag}
+  GA event tracking.
+  Category: ${this.gaCategory}
+  action: ${gaAction}
+  label: ${gaLabel}`) */
+
+      window.gtag('event', 'CF event', {
+        event_category: this.gaCategory,
+        event_action: this.gaAction,
+        event_label: this.gaLabel
+      })
+
+      success()
+    },
+    submitCallback () {
+      /* console.log(`GA event tracking.
+  Category: ${this.gaCategory}
+  action: Form submitted
+  label:)`) */
+      window.gtag('event', 'CF submitted', {
+        event_category: this.gaCategory,
+        event_action: 'Form submitted',
+        event_label: 'Reached end of form'
+      })
+      this.cf.addRobotChatResponse('Thanks for your feedback')
     }
   },
   computed: {
   },
   mounted () {
     // Load in the json via axios
+    // By default we get sheet 1
+    // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/a75350b2f458/sheets/conversation-2
     axios
       .get('https://sheetsu.com/apis/v1.0su/a75350b2f458')
       .then(response => {
