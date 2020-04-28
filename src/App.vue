@@ -80,11 +80,12 @@ section#devpanel {
   left: -9999px;
 }
 section#intro {
-  padding-top: 6rem;
+  padding-top: 3.5rem;
   p {
     color: #fff;
     font-size: 3rem;
     line-height: 1.1;
+    margin-bottom: 32px;
     span {
       color: rgba(255,255,255, 0.5);
     }
@@ -102,15 +103,18 @@ section#menu {
   justify-content: center;
 }
 #formTarget {
-  height: calc(100vh - 300px);
+  height: calc(100vh - 260px);
 }
 nav {
   margin: 1rem 0;
 }
-ul li a, ul li button {
+ul li a, ul li button, button.reload {
   background: none;
   border: none;
   font-size: 2rem;
+}
+button.reload {
+  margin: 2.5rem 0;
 }
 form {
   text-align: left;

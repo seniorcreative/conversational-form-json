@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav>
-      <button type="button" class="plain" @click="activateMenu()">Menu</button>
+      <button type="button" class="plain is-hidden" @click="activateMenu()">Menu</button>
       <div v-show="showMenu" class="has-text-right"><a @click="deactivateMenu()" class="btn-close"></a></div>
     </nav>
     <!-- Welcome -->
@@ -19,6 +19,7 @@
       </ul>
     </section>
     <!-- Conversation tool -->
+    <button type="button" v-show="showReload" class="reload" @click="converse()">Start again</button>
     <div class="columns" v-show="!showMenu">
       <div class="column is-8 is-offset-2" id="formTarget">
       </div>
@@ -43,11 +44,13 @@ export default {
       templateData: {},
       formData: {},
       cf: null,
-      gaCategory: 'CF Tool - Worksafe Conversation Tester'
+      gaCategory: 'CF Tool - Worksafe Conversation Tester',
+      showReload: false
     }
   },
   methods: {
     converse () {
+      this.showReload = false
       this.cf = ConversationalForm.startTheConversation(this.formData)
     },
     toggle (paramName) {
@@ -116,7 +119,7 @@ export default {
       const userInterfaceOptions = {
         controlElementsInAnimationDelay: 250,
         robot: {
-          robotResponseTime: 2000,
+          robotResponseTime: 1750,
           chainedResponseTime: 500
         },
         user: {
@@ -126,7 +129,7 @@ export default {
       }
       const options = {
         context: document.getElementById('formTarget'),
-        theme: 'dark',
+        theme: 'dark', // FYI this gets a few yellow overrides
         showProgressBar: true,
         userInterfaceOptions,
         submitCallback: this.submitCallback,
@@ -167,7 +170,14 @@ export default {
         event_action: 'Form submitted',
         event_label: 'Reached end of form'
       })
-      this.cf.addRobotChatResponse('Thanks for your feedback')
+      this.cf.addRobotChatResponse('Thanks for your feedback.')
+      // Kill form?
+      window.jQuery('.inputWrapper > textarea').val('')
+      setTimeout(() => {
+        // this.cf.remapTagsAndStartFrom(0, 0, 1)
+        this.cf.remove()
+        this.showReload = true
+      }, 5000)
     }
   },
   computed: {
