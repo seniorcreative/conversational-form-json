@@ -14,8 +14,8 @@
     <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
       <ul>
-        <li><a @click="setForm(1)" v-bind:class="{ active: formIndex == 1 }" >Conversation 1</a></li>
-        <li><a @click="setForm(2)" v-bind:class="{ active: formIndex == 2 }" >Conversation 2</a></li>
+        <li><button type="button" @click="setForm(1)" v-bind:class="{ active: formIndex == 1 }" >Conversation 1</button></li>
+        <li><button type="button" @click="setForm(2)" v-bind:class="{ active: formIndex == 2 }" disabled >Conversation 2</button></li>
       </ul>
     </section>
     <!-- Conversation tool -->
@@ -28,9 +28,7 @@
 
 <script>
 import axios from 'axios'
-// import DynamicTemplate from './dynamictemplate'
-// You need the CSV loader in the vue.config to read the file below!
-// import csv from '../assets/csv/sheet1.csv'
+import { ConversationalForm } from 'conversational-form'
 
 export default {
   name: 'Start',
@@ -48,9 +46,7 @@ export default {
   },
   methods: {
     converse () {
-      // window.jQuery('form').conversationalForm({ context: document.getElementById('formTarget'), theme: 'dark' })
-      const cf = window.cf.ConversationalForm.startTheConversation(this.formData)
-      // cf.addRobotChatResponse('Thank you for participating.')
+      const cf = ConversationalForm.startTheConversation(this.formData)
     },
     toggle (paramName) {
       this[paramName] = !this[paramName]
@@ -124,7 +120,14 @@ export default {
           showThumb: false
         }
       }
-      const options = { context: document.getElementById('formTarget'), theme: 'dark', showProgressBar: true, userInterfaceOptions }
+      const options = {
+        context: document.getElementById('formTarget'),
+        theme: 'dark',
+        showProgressBar: true,
+        userInterfaceOptions,
+        // submitCallback: this.submitCallback,
+        preventAutoFocus: true
+      }
       this.formData = { options, tags }
       this.converse()
     }
@@ -145,4 +148,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+
 </style>

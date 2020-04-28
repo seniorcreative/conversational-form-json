@@ -18,7 +18,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('./assets/main.scss');
+@import './assets/main.scss';
+
 html, body {
   height: 100%;
   background-color: #1a1a1c !important;
@@ -40,7 +41,7 @@ html, body {
 .columns {
   height: 100%;
 }
-a, button.plain {
+a, button.plain, button {
   cursor: pointer;
   color: #fff !important;
   background: none;
@@ -51,6 +52,11 @@ a, button.plain {
   &:hover, &.active {
     color: #fdb813 !important;
   }
+}
+button[disabled] {
+  opacity: 0.2;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 .container {
   height: 100%;
@@ -101,7 +107,9 @@ section#menu {
 nav {
   margin: 1rem 0;
 }
-ul li a {
+ul li a, ul li button {
+  background: none;
+  border: none;
   font-size: 2rem;
 }
 form {
@@ -129,5 +137,9 @@ a.btn-close {
   background: url('./assets/close-icon.svg') no-repeat center center;
   width: 24px;
   height: 24px;
+}
+
+button:focus {
+  outline: none;
 }
 </style>
