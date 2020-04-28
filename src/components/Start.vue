@@ -154,8 +154,8 @@ export default {
 
       window.gtag('event', 'CF event', {
         event_category: this.gaCategory,
-        event_action: this.gaAction,
-        event_label: this.gaLabel
+        event_action: gaAction,
+        event_label: gaLabel
       })
 
       success()
