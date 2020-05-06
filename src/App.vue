@@ -80,7 +80,7 @@ section#devpanel {
   left: -9999px;
 }
 section#intro {
-  padding-top: 3.5rem;
+  padding-top: 5.7rem;
   p {
     color: #fff;
     font-size: 3rem;
@@ -103,7 +103,7 @@ section#menu {
   justify-content: center;
 }
 #formTarget {
-  height: calc(100vh - 260px);
+  height: calc(100vh - 300px);
 }
 nav {
   margin: 1rem 0;

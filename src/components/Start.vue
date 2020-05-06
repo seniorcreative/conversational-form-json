@@ -1,7 +1,7 @@
 <template>
   <div>
     <nav>
-      <button type="button" class="plain is-hidden" @click="activateMenu()">Menu</button>
+      <button type="button" class="plain" @click="activateMenu()">Menu</button>
       <div v-show="showMenu" class="has-text-right"><a @click="deactivateMenu()" class="btn-close"></a></div>
     </nav>
     <!-- Welcome -->
@@ -14,8 +14,8 @@
     <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
       <ul>
-        <li><button type="button" @click="setForm(1)" v-bind:class="{ active: formIndex == 1 }" >Conversation 1</button></li>
-        <li><button type="button" @click="setForm(2)" v-bind:class="{ active: formIndex == 2 }" disabled >Conversation 2</button></li>
+        <li><button type="button" @click="setForm('conversation-2')" v-bind:class="{ active: formIndex == 2 }" >Conversation 1</button></li>
+        <li><button type="button" @click="setForm('conversation-3')" v-bind:class="{ active: formIndex == 3 }" __disabled="!this.form1Submitted" >Conversation 2</button></li>
       </ul>
     </section>
     <!-- Conversation tool -->
@@ -40,6 +40,7 @@ export default {
     return {
       showMenu: false,
       formIndex: 1,
+      form1Submitted: false,
       templateData: {},
       formData: {},
       cf: null,
@@ -51,18 +52,25 @@ export default {
   methods: {
     converse () {
       this.showReload = false
+      this.showMenu = false
       this.cf = ConversationalForm.startTheConversation(this.formData)
     },
     toggle (paramName) {
       this[paramName] = !this[paramName]
     },
-    setForm (index) {
-      this.formIndex = index
-      this.templateData = this.csvData.data[this.formIndex - 1]
-      this.showMenu = false
-      setTimeout(() => {
-        this.converse()
-      }, 500)
+    setForm (formName) {
+      this.formIndex = parseInt(formName.split('-')[1])
+      // this.templateData = this.csvData.data[this.formIndex - 1]
+      // this.showMenu = false
+      // setTimeout(() => {
+      //   this.converse()
+      // }, 500)
+      axios
+        .get(`https://sheetsu.com/apis/v1.0su/a75350b2f458/sheets/${formName}`)
+        .then(response => {
+          this.formatJSONAsTags(response.data)
+        }
+        )
     },
     submit () {
       // Form submit
@@ -79,7 +87,15 @@ export default {
         const tagObj = {}
         const step = q + 1
         const answers = data[q]['Selectors / Input type'].split(', ')
-        tagObj['cf-questions'] = data[q]['Question / Content']
+        let questionContent = data[q]['Question / Content']
+        // Loop the globals... replace.
+        for (const g in this.globalTags) {
+          const searchTerm = `{{${g}}}`
+          if (questionContent.indexOf(searchTerm) !== -1) {
+            questionContent = questionContent.replace(searchTerm, this.globalTags[g])
+          }
+        }
+        tagObj['cf-questions'] = questionContent
         const answerType = answers[0].toLowerCase()
         if (answerType === 'longtext' || answerType === 'text' || answerType === 'date') {
           tagObj.name = `cfc-${step}`
@@ -167,13 +183,15 @@ export default {
         event_action: `Form ${this.formIndex} submitted`,
         event_label: `Reached end of form ${this.formIndex}`
       })
-      this.cf.addRobotChatResponse('Thanks for your feedback.')
+      // this.cf.addRobotChatResponse('Thanks for your feedback.')
       // Kill form?
       window.jQuery('.inputWrapper > textarea').val('')
       setTimeout(() => {
         this.cf.remove()
-        this.showReload = true
-      }, 5000)
+        // this.showReload = true
+        this.form1Submitted = true
+        this.activateMenu()
+      }, 3000)
     }
   },
   computed: {
@@ -181,12 +199,7 @@ export default {
   mounted () {
     // Load in the specific sheet json via axios
     // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/a75350b2f458/sheets/conversation-2
-    axios
-      .get('https://sheetsu.com/apis/v1.0su/a75350b2f458/sheets/conversation-2')
-      .then(response => {
-        this.formatJSONAsTags(response.data)
-      }
-      )
+    this.setForm('conversation-2')
   }
 }
 </script>
