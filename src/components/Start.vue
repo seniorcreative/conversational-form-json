@@ -40,12 +40,12 @@ export default {
     return {
       showMenu: false,
       formIndex: 1,
-      // templateData: templateJson.data[0]
       templateData: {},
       formData: {},
       cf: null,
       gaCategory: 'CF Tool - Worksafe Conversation Tester',
-      showReload: false
+      showReload: false,
+      globalTags: {}
     }
   },
   methods: {
@@ -80,11 +80,13 @@ export default {
         const step = q + 1
         const answers = data[q]['Selectors / Input type'].split(', ')
         tagObj['cf-questions'] = data[q]['Question / Content']
-        if (answers[0].toLowerCase() === 'text') {
+        const answerType = answers[0].toLowerCase()
+        if (answerType === 'longtext' || answerType === 'text' || answerType === 'date') {
           tagObj.name = `cfc-${step}`
+          tagObj.id = data[q].Pipe || tagObj.name
           tagObj.tag = 'input'
-          tagObj.type = 'text'
-          tagObj.rows = 3
+          tagObj.type = answerType
+          if (answerType === 'longtext') tagObj.rows = 3
         } else {
           tagObj.tag = 'fieldset'
           tagObj.children = []
@@ -93,7 +95,7 @@ export default {
             aTag.tag = 'input'
             aTag.type = 'radio'
             aTag.name = `cfc-question-${step}`
-            aTag.id = `cfc-${step}-a-${a}`
+            aTag.id = data[q].Pipe || `cfc-${step}-a-${a}`
             aTag['cf-label'] = answers[a]
             aTag.value = answers[a]
             tagObj.children.push(aTag)
@@ -110,18 +112,24 @@ export default {
         if (logic.length > 1 && q > 0) {
           // Jump ahead in time and add the conditionals to subsequent questions
           for (let l = 0; l < logic.length; l++) {
-            const goto = parseInt(logic[l]) - 2
-            tags[goto].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers[l]))
+            // Check if the condition has a star - if it does, both conditions here lead to that question
+            if (logic[l].indexOf('*') !== -1) {
+              const goto = parseInt(logic[l].split('*')[0]) - 2
+              if (tags[goto].children) tags[goto].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers.join('||')))
+            } else {
+              const goto = parseInt(logic[l]) - 2
+              if (tags[goto].children) tags[goto].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers[l]))
+            }
           }
         }
       }
 
       const userInterfaceOptions = {
-        controlElementsInAnimationDelay: 250,
-        robot: {
-          robotResponseTime: 1750,
-          chainedResponseTime: 500
-        },
+        // controlElementsInAnimationDelay: 250,
+        // robot: {
+        //   robotResponseTime: 1000
+        // //   chainedResponseTime: 500
+        // },
         user: {
           showThinking: false,
           showThumb: false
@@ -133,7 +141,7 @@ export default {
         showProgressBar: true,
         userInterfaceOptions,
         submitCallback: this.submitCallback,
-        preventAutoFocus: true,
+        preventAutoFocus: false,
         flowStepCallback: this.flowStepCallback
       }
       this.formData = { options, tags }
@@ -142,16 +150,9 @@ export default {
     flowStepCallback (dto, success, error) {
       const currentStep = this.cf.flowManager.getStep() + 1 // Steps are 0-based so we add 1
       const maxSteps = this.cf.flowManager.maxSteps // This value is not 0-based
-      const gaAction = `Step ${currentStep}/${maxSteps}`
-      const gaLabel = `Field name - ${dto.tag.name}` // We only track actual field name for reference purpose. If you want to track the actual value you may do so.
-
-      /*       console.log(
-        `tag script: ${window.gtag}
-  GA event tracking.
-  Category: ${this.gaCategory}
-  action: ${gaAction}
-  label: ${gaLabel}`) */
-
+      const gaAction = `Form ${this.formIndex} Step ${currentStep}/${maxSteps}`
+      const gaLabel = `Form ${this.formIndex} Field name - ${dto.tag.name}` // We only track actual field name for reference purpose. If you want to track the actual value you may do so.
+      this.globalTags[dto.tag.id] = dto.text // Stash as global so can use in the next form?
       window.gtag('event', 'CF event', {
         event_category: this.gaCategory,
         event_action: gaAction,
@@ -161,20 +162,15 @@ export default {
       success()
     },
     submitCallback () {
-      /* console.log(`GA event tracking.
-  Category: ${this.gaCategory}
-  action: Form submitted
-  label:)`) */
       window.gtag('event', 'CF submitted', {
         event_category: this.gaCategory,
-        event_action: 'Form submitted',
-        event_label: 'Reached end of form'
+        event_action: `Form ${this.formIndex} submitted`,
+        event_label: `Reached end of form ${this.formIndex}`
       })
       this.cf.addRobotChatResponse('Thanks for your feedback.')
       // Kill form?
       window.jQuery('.inputWrapper > textarea').val('')
       setTimeout(() => {
-        // this.cf.remapTagsAndStartFrom(0, 0, 1)
         this.cf.remove()
         this.showReload = true
       }, 5000)
@@ -183,11 +179,10 @@ export default {
   computed: {
   },
   mounted () {
-    // Load in the json via axios
-    // By default we get sheet 1
+    // Load in the specific sheet json via axios
     // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/a75350b2f458/sheets/conversation-2
     axios
-      .get('https://sheetsu.com/apis/v1.0su/a75350b2f458')
+      .get('https://sheetsu.com/apis/v1.0su/a75350b2f458/sheets/conversation-2')
       .then(response => {
         this.formatJSONAsTags(response.data)
       }
