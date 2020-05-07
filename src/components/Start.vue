@@ -14,8 +14,8 @@
     <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
       <ul>
-        <li><button type="button" @click="setForm('conversation-2')" v-bind:class="{ active: formIndex == 2 }" >Conversation 1</button></li>
-        <li><button type="button" @click="setForm('conversation-3')" v-bind:class="{ active: formIndex == 3 }" __disabled="!this.form1Submitted" >Conversation 2</button></li>
+        <li><button type="button" @click="setForm('conversation-2')" _v-bind:class="{ active: formIndex == 2 }" >Conversation 1</button></li>
+        <li><button type="button" @click="setForm('conversation-3')" _v-bind:class="{ active: formIndex == 3 }" :disabled="!this.form1Submitted" >Conversation 2</button></li>
       </ul>
     </section>
     <!-- Conversation tool -->
@@ -66,7 +66,7 @@ export default {
       //   this.converse()
       // }, 500)
       axios
-        .get(`https://sheetsu.com/apis/v1.0su/a75350b2f458/sheets/${formName}`)
+        .get(`https://sheetsu.com/apis/v1.0bu/a75350b2f458/sheets/${formName}`)
         .then(response => {
           this.formatJSONAsTags(response.data)
         }
@@ -142,10 +142,10 @@ export default {
 
       const userInterfaceOptions = {
         // controlElementsInAnimationDelay: 250,
-        // robot: {
+        robot: {
         //   robotResponseTime: 1000
-        // //   chainedResponseTime: 500
-        // },
+          chainedResponseTime: 1000
+        },
         user: {
           showThinking: false,
           showThumb: false

@@ -70,7 +70,7 @@ nav {
   top: 0;
   left: 0;
   margin: 0 !important;
-  padding: 1.5rem;
+  padding: 1rem;
   background-color: #1a1a1c;
 }
 section#devpanel {
@@ -80,7 +80,7 @@ section#devpanel {
   left: -9999px;
 }
 section#intro {
-  padding-top: 5.7rem;
+  padding-top: 4.4rem;
   p {
     color: #fff;
     font-size: 3rem;
@@ -103,10 +103,7 @@ section#menu {
   justify-content: center;
 }
 #formTarget {
-  height: calc(100vh - 300px);
-}
-nav {
-  margin: 1rem 0;
+  height: calc(100vh - 280px);
 }
 ul li a, ul li button, button.reload {
   background: none;
