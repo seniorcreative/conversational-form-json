@@ -28,14 +28,11 @@
     </div>
     <div class="columns" v-show="showAbout">
       <div class="column is-8 is-offset-2 content-block  has-text-left">
-        <h3 class="title is-4">About</h3>
-<p>Nobody loves paperwork or long online forms. What if you could have a conversation instead of having to fill out a form?</p>
-<p>That&rsquo;s a problem that has been tackled by the clever people over at Space10 who came up with the conversational form tool. It takes a normal web form and converts it into a two-way conversational experience, like having a chat via text messaging.</p>
-<p>Worksafe conversation tester is a web app prototype our innovation department made that expands upon this tool. With a bit of extra coding and another third party app we were able to make something quickly that we could start putting in front of real people to get some very interesting feedback.</p>
-<p>This tool has been enabling us to test a different way for injured workers to submit an injury claim. At present our claim form is long-winded and requires detailed input. To test how we can make life easier for injured workers, we think having a conversation would be a much better way to get the ball rolling.</p>
-<p>We found a way to feed the conversational form tool a list of questions from a google spreadsheet via <a href="https://sheetsu.com/">Sheetsu</a>. Sheetsu reads the google document and converts it to a different format (JSON). Then within our app we loop over the sheet data and convert it to a format it uses to start asking the right questions.</p>
-<p>The form will ask different questions based on information the user provides, leading them down different branches and to different outcomes. We engineered a way to tell the form what to ask next based on the answer given, by putting some basic logic instructions in our google sheet.</p>
-<p>As its a work in progress, we have been refining the question flows as we go, which is as simple as updating our google spreadsheet.</p>
+        <h3>About</h3>
+        <p>Nobody likes filling in lengthy paperwork or online forms.</p>
+<p>The clever folks over at <a href="https://space10.com">Space10</a> have looked to address this problem by developing a conversational form framework, that takes a normal web form and converts it into a more dynamic two-way dialogue.</p>
+<p>At WorkSafe Innovation we have extended on this work as a means to rapidly prototype and test new service conversations with our clients. With a bit of extra code and a third-party app called <a href="https://sheetsu.com/">Sheetsu</a> (which reads a spreadsheet and converts it into JSON), we are now able to manage the conversation questions in a Google spreadsheet and quickly test different content variations by applying some conditional logic.</p>
+<p>We would like to say thanks Space10 for their groundwork and in the spirit of continuing the conversation with other developers/designers have made our code available for others to reuse here.</p>
       </div>
     </div>
   </div>

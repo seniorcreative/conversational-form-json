@@ -53,6 +53,9 @@ a, button.plain, button {
     color: #fdb813 !important;
   }
 }
+button.plain {
+  padding: 0 20px !important;
+}
 button[disabled] {
   opacity: 0.2;
   pointer-events: none;
@@ -108,7 +111,7 @@ section#menu {
 ul li a, ul li button, button.reload {
   background: none;
   border: none;
-  font-size: 2rem;
+  font-size: 3rem;
 }
 button.reload {
   margin: 2.5rem 0;
@@ -139,23 +142,24 @@ a.btn-close {
   width: 24px;
   height: 24px;
 }
-
 button:focus {
   outline: none;
 }
 .content-block {
   h3 {
     color: #e9e9e9;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
   }
   p {
-    color: #c8c8c8;
+    color: #e9e9e9;
     line-height: 1.5;
     font-size: 1rem;
-    margin-bottom: 1rem;
-    letter-spacing: 0.075rem;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
   }
   a {
-    font-size: 1rem;
+    font-size: 1.5rem;
     color: #fdb813 !important;
     text-decoration: underline;
   }
