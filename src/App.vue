@@ -143,4 +143,22 @@ a.btn-close {
 button:focus {
   outline: none;
 }
+.content-block {
+  h3 {
+    color: #e9e9e9;
+  }
+  p {
+    color: #c8c8c8;
+    line-height: 1.5;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.075rem;
+  }
+  a {
+    font-size: 1rem;
+    color: #fdb813 !important;
+    text-decoration: underline;
+  }
+  margin-top: 6rem;
+}
 </style>

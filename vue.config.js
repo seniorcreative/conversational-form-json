@@ -1,4 +1,22 @@
 module.exports = {
+  chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].title = 'Worksafe Conversation Tester'
+        return args
+      })
+  },
+  pwa: {
+    name: 'Worksafe Conversation Tester',
+    iconPaths: {
+      favicon32: 'img/icons/32.png',
+      favicon16: 'img/icons/16.png',
+      appleTouchIcon: 'img/icons/152.png',
+      maskIcon: 'img/icons/32.svg',
+      msTileImage: 'img/icons/144.png'
+    }
+  },
   pluginOptions: {
     s3Deploy: {
       awsProfile: 'default',

@@ -1,11 +1,13 @@
 <template>
   <div>
     <nav>
-      <button type="button" class="plain" @click="activateMenu()">Menu</button>
+      <button type="button" class="plain" v-bind:class="{ active: showMenu }" @click="activateMenu()">Menu</button>
+      <button type="button" class="plain" v-bind:class="{ active: showAbout }" @click="activateAbout()">About</button>
       <div v-show="showMenu" class="has-text-right"><a @click="deactivateMenu()" class="btn-close"></a></div>
+      <div v-show="showAbout" class="has-text-right"><a @click="deactivateAbout()" class="btn-close"></a></div>
     </nav>
     <!-- Welcome -->
-    <section id="intro" v-show="!showMenu" class="intro  has-text-centered">
+    <section id="intro" v-show="!showMenu && !showAbout" class="intro  has-text-centered">
       <p>
         Welcome to the<br>
         <span>WorkSafe Victoria</span><br>
@@ -18,10 +20,22 @@
         <li><button type="button" @click="setForm('conversation-3')" _v-bind:class="{ active: formIndex == 3 }" :disabled="!this.form1Submitted" >Conversation 2</button></li>
       </ul>
     </section>
-    <!-- Conversation tool -->
+    <!-- Content tool -->
     <button type="button" v-show="showReload" class="reload" @click="converse()">Start again</button>
-    <div class="columns" v-show="!showMenu">
+    <div class="columns" v-show="!showMenu && !showAbout">
       <div class="column is-8 is-offset-2" id="formTarget">
+      </div>
+    </div>
+    <div class="columns" v-show="showAbout">
+      <div class="column is-8 is-offset-2 content-block  has-text-left">
+        <h3 class="title is-4">About</h3>
+<p>Nobody loves paperwork or long online forms. What if you could have a conversation instead of having to fill out a form?</p>
+<p>That&rsquo;s a problem that has been tackled by the clever people over at Space10 who came up with the conversational form tool. It takes a normal web form and converts it into a two-way conversational experience, like having a chat via text messaging.</p>
+<p>Worksafe conversation tester is a web app prototype our innovation department made that expands upon this tool. With a bit of extra coding and another third party app we were able to make something quickly that we could start putting in front of real people to get some very interesting feedback.</p>
+<p>This tool has been enabling us to test a different way for injured workers to submit an injury claim. At present our claim form is long-winded and requires detailed input. To test how we can make life easier for injured workers, we think having a conversation would be a much better way to get the ball rolling.</p>
+<p>We found a way to feed the conversational form tool a list of questions from a google spreadsheet via <a href="https://sheetsu.com/">Sheetsu</a>. Sheetsu reads the google document and converts it to a different format (JSON). Then within our app we loop over the sheet data and convert it to a format it uses to start asking the right questions.</p>
+<p>The form will ask different questions based on information the user provides, leading them down different branches and to different outcomes. We engineered a way to tell the form what to ask next based on the answer given, by putting some basic logic instructions in our google sheet.</p>
+<p>As its a work in progress, we have been refining the question flows as we go, which is as simple as updating our google spreadsheet.</p>
       </div>
     </div>
   </div>
@@ -39,6 +53,7 @@ export default {
   data () {
     return {
       showMenu: false,
+      showAbout: false,
       formIndex: 1,
       form1Submitted: false,
       templateData: {},
@@ -53,6 +68,7 @@ export default {
     converse () {
       this.showReload = false
       this.showMenu = false
+      this.showAbout = false
       this.cf = ConversationalForm.startTheConversation(this.formData)
     },
     toggle (paramName) {
@@ -60,11 +76,6 @@ export default {
     },
     setForm (formName) {
       this.formIndex = parseInt(formName.split('-')[1])
-      // this.templateData = this.csvData.data[this.formIndex - 1]
-      // this.showMenu = false
-      // setTimeout(() => {
-      //   this.converse()
-      // }, 500)
       axios
         .get(`https://sheetsu.com/apis/v1.0bu/a75350b2f458/sheets/${formName}`)
         .then(response => {
@@ -77,9 +88,17 @@ export default {
     },
     activateMenu () {
       this.showMenu = !this.showMenu
+      this.showAbout = false
     },
     deactivateMenu () {
       this.showMenu = false
+    },
+    activateAbout () {
+      this.showAbout = !this.showAbout
+      this.showMenu = false
+    },
+    deactivateAbout () {
+      this.showAbout = false
     },
     formatJSONAsTags (data) {
       const tags = []
