@@ -164,5 +164,17 @@ button:focus {
     text-decoration: underline;
   }
   margin-top: 6rem;
+
+  @media (max-width: 768px) {
+     h3 {
+      font-size: 1.2rem;
+    }
+    p {
+      font-size: 1.2rem;
+    }
+    a {
+      font-size: 1.2rem;
+    }
+  }
 }
 </style>
