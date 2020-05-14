@@ -16,8 +16,9 @@
     <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
       <ul>
-        <li><button type="button" @click="setForm('conversation-2')" _v-bind:class="{ active: formIndex == 2 }" >Conversation 1</button></li>
-        <li><button type="button" @click="setForm('conversation-3')" _v-bind:class="{ active: formIndex == 3 }" :disabled="!this.form1Submitted" >Conversation 2</button></li>
+        <li><button type="button" @click="setForm('conversation-2')" >Conversation 1</button></li>
+        <!-- NB: Second conversation is disabled until first one is completed and uses values input in first conversation -->
+        <li><button type="button" @click="setForm('conversation-3')" :disabled="!this.form1Submitted" >Conversation 2</button></li>
       </ul>
     </section>
     <!-- Content tool -->
@@ -39,6 +40,7 @@
 </template>
 
 <script>
+import privateKeys from '../../config.private'
 import axios from 'axios'
 import { ConversationalForm } from 'conversational-form'
 
@@ -74,7 +76,7 @@ export default {
     setForm (formName) {
       this.formIndex = parseInt(formName.split('-')[1])
       axios
-        .get(`https://sheetsu.com/apis/v1.0bu/a75350b2f458/sheets/${formName}`)
+        .get(`https://sheetsu.com/apis/v1.0bu/${privateKeys.config.SHEETSU_API_KEY}/sheets/${formName}`)
         .then(response => {
           this.formatJSONAsTags(response.data)
         }
@@ -214,7 +216,7 @@ export default {
   },
   mounted () {
     // Load in the specific sheet json via axios
-    // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/a75350b2f458/sheets/conversation-2
+    // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/SHEETSU_API_KEY/sheets/conversation-2
     this.setForm('conversation-2')
   }
 }
