@@ -32,7 +32,7 @@
         <p>Nobody likes filling in lengthy paperwork or online forms.</p>
 <p>The clever folks over at <a href="https://space10.com">Space10</a> have looked to address this problem by developing a conversational form framework, that takes a normal web form and converts it into a more dynamic two-way dialogue.</p>
 <p>At WorkSafe Innovation we have extended on this work as a means to rapidly prototype and test new service conversations with our clients. With a bit of extra code and a third-party app called <a href="https://sheetsu.com/">Sheetsu</a> (which reads a spreadsheet and converts it into JSON), we are now able to manage the conversation questions in a Google spreadsheet and quickly test different content variations by applying some conditional logic.</p>
-<p>We would like to say thanks Space10 for their groundwork and in the spirit of continuing the conversation with other developers/designers have made our code available for others to reuse here.</p>
+<p>We would like to say thanks Space10 for their groundwork and in the spirit of continuing the conversation with other developers/designers have made our code available for others to reuse <a href="https://bitbucket.org/worksafeinnovation/conversational-form-json/src/master/">here</a>.</p>
       </div>
     </div>
   </div>
