@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import privateKeys from '../../config.private'
 import axios from 'axios'
 import { ConversationalForm } from 'conversational-form'
 
@@ -76,7 +75,7 @@ export default {
     setForm (formName) {
       this.formIndex = parseInt(formName.split('-')[1])
       axios
-        .get(`https://sheetsu.com/apis/v1.0bu/${privateKeys.config.SHEETSU_API_KEY}/sheets/${formName}`)
+        .get(`https://sheetsu.com/apis/v1.0bu/${process.env.VUE_APP_SHEETSU_API_KEY}/sheets/${formName}`)
         .then(response => {
           this.formatJSONAsTags(response.data)
         }
@@ -216,7 +215,7 @@ export default {
   },
   mounted () {
     // Load in the specific sheet json via axios
-    // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/SHEETSU_API_KEY/sheets/conversation-2
+    // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/VUE_APP_SHEETSU_API_KEY/sheets/conversation-2
     this.setForm('conversation-2')
   }
 }

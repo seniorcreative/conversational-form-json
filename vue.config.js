@@ -1,5 +1,3 @@
-import privateKeys from './config.private'
-
 module.exports = {
   chainWebpack: config => {
     config
@@ -36,7 +34,7 @@ module.exports = {
       pwa: true,
       pwaFiles: 'index.html,service-worker.js,manifest.json',
       enableCloudfront: true,
-      cloudfrontId: privateKeys.config.CLOUDFRONT_ID,
+      cloudfrontId: process.env.VUE_APP_CLOUDFRONT_ID,
       cloudfrontMatchers: '/*',
       uploadConcurrency: 5,
       cacheControl: 'Sets cache-control metadata for all uploads, overridden for individual files by pwa settings',
