@@ -16,9 +16,9 @@
     <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
       <ul>
-        <li><button type="button" @click="setForm('conversation-2')" >Conversation 1</button></li>
+        <li><button type="button" @click="setForm('')" >Conversation 1</button></li>
         <!-- NB: Second conversation is disabled until first one is completed and uses values input in first conversation -->
-        <li><button type="button" @click="setForm('conversation-3')" :disabled="!this.form1Submitted" >Conversation 2</button></li>
+        <li><button type="button" @click="setForm('conversation-2')" :disabled="!this.form1Submitted" >Conversation 2</button></li>
       </ul>
     </section>
     <!-- Content tool -->
@@ -73,9 +73,11 @@ export default {
       this[paramName] = !this[paramName]
     },
     setForm (formName) {
-      this.formIndex = parseInt(formName.split('-')[1])
+      // TODO: Add a UI loader while we wait for the async response.
+      this.formIndex = formName.length ? parseInt(formName.split('-')[1]) : 1
+      const sheetSuffix = formName !== '' ? `/sheets/${formName}` : ''
       axios
-        .get(`https://sheetsu.com/apis/v1.0bu/${process.env.VUE_APP_SHEETSU_API_KEY}/sheets/${formName}`)
+        .get(`https://sheetsu.com/apis/v1.0bu/${process.env.VUE_APP_SHEETSU_API_KEY}${sheetSuffix}`)
         .then(response => {
           this.formatJSONAsTags(response.data)
         }
@@ -216,7 +218,7 @@ export default {
   mounted () {
     // Load in the specific sheet json via axios
     // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/VUE_APP_SHEETSU_API_KEY/sheets/conversation-2
-    this.setForm('conversation-2')
+    this.setForm('')
   }
 }
 </script>
