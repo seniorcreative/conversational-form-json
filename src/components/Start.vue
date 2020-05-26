@@ -17,8 +17,8 @@
     <section id="menu" v-show="showMenu">
       <ul>
         <li><button type="button" @click="setForm('')" >Conversation 1</button></li>
-        <!-- NB: Second conversation is disabled until first one is completed and uses values input in first conversation -->
-        <li><button type="button" @click="setForm('conversation-2')" :disabled="!this.form1Submitted" >Conversation 2</button></li>
+        <li><button type="button" @click="setForm('conversation-2')">Conversation 2</button></li>
+        <li><button type="button" @click="setForm('conversation-3')">Conversation 3</button></li>
       </ul>
     </section>
     <!-- Content tool -->
