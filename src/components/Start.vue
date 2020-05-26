@@ -17,10 +17,16 @@
     <section id="menu" v-show="showMenu">
       <ul>
         <li><button type="button" @click="setForm('')" >Conversation 1</button></li>
-        <!-- NB: Second conversation is disabled until first one is completed and uses values input in first conversation -->
-        <li><button type="button" @click="setForm('conversation-2')" :disabled="!this.form1Submitted" >Conversation 2</button></li>
+        <li><button type="button" @click="setForm('conversation-2')">Conversation 2</button></li>
+        <li><button type="button" @click="setForm('conversation-3')">Conversation 3</button></li>
       </ul>
     </section>
+    <!-- Loader -->
+    <div class="columns" v-show="isLoading">
+      <div class="column is-8 is-offset-2">
+        <button class="button is-loading is-dark"></button>
+      </div>
+    </div>
     <!-- Content tool -->
     <button type="button" v-show="showReload" class="reload" @click="converse()">Start again</button>
     <div class="columns" v-show="!showMenu && !showAbout">
@@ -53,13 +59,13 @@ export default {
       showMenu: false,
       showAbout: false,
       formIndex: 1,
-      form1Submitted: false,
       templateData: {},
       formData: {},
       cf: null,
       gaCategory: 'CF Tool - Worksafe Conversation Tester',
       showReload: false,
-      globalTags: {}
+      globalTags: {},
+      isLoading: true
     }
   },
   methods: {
@@ -73,13 +79,17 @@ export default {
       this[paramName] = !this[paramName]
     },
     setForm (formName) {
-      // TODO: Add a UI loader while we wait for the async response.
+      this.isLoading = true
+      this.showMenu = false
+      window.jQuery('.inputWrapper > textarea').val('')
+      if (this.cf) this.cf.remove()
       this.formIndex = formName.length ? parseInt(formName.split('-')[1]) : 1
       const sheetSuffix = formName !== '' ? `/sheets/${formName}` : ''
       axios
         .get(`https://sheetsu.com/apis/v1.0bu/${process.env.VUE_APP_SHEETSU_API_KEY}${sheetSuffix}`)
         .then(response => {
           this.formatJSONAsTags(response.data)
+          this.isLoading = false
         }
         )
     },
@@ -105,7 +115,11 @@ export default {
       for (let q = 0; q < data.length; q++) {
         const tagObj = {}
         const step = q + 1
-        const answers = data[q]['Selectors / Input type'].split(', ')
+        const answers = data[q].Answers.split(', ')
+        for (const a in answers) {
+          answers[a] = answers[a].split('COMMA').join(',')
+        }
+        const inputType = data[q]['Input type']
         let questionContent = data[q]['Question / Content']
         // Loop the globals... replace.
         for (const g in this.globalTags) {
@@ -115,20 +129,19 @@ export default {
           }
         }
         tagObj['cf-questions'] = questionContent
-        const answerType = answers[0].toLowerCase()
-        if (answerType === 'longtext' || answerType === 'text' || answerType === 'date') {
+        if (inputType === 'textarea' || inputType === 'text') {
           tagObj.name = `cfc-${step}`
           tagObj.id = data[q].Pipe || tagObj.name
           tagObj.tag = 'input'
-          tagObj.type = answerType
-          if (answerType === 'longtext') tagObj.rows = 3
+          tagObj.type = inputType
+          if (inputType === 'textarea') tagObj.rows = 3
         } else {
           tagObj.tag = 'fieldset'
           tagObj.children = []
           for (let a = 0; a < answers.length; a++) {
             const aTag = {}
             aTag.tag = 'input'
-            aTag.type = 'radio'
+            aTag.type = inputType
             aTag.name = `cfc-question-${step}`
             aTag.id = data[q].Pipe || `cfc-${step}-a-${a}`
             aTag['cf-label'] = answers[a]
@@ -141,28 +154,38 @@ export default {
       }
       // Loop again and add logic
       for (let q = 0; q < data.length; q++) {
-        const answers = data[q]['Selectors / Input type'].split(', ')
+        const answers = data[q].Answers.split(', ')
+        for (const a in answers) {
+          answers[a] = answers[a].split('COMMA').join(',')
+        }
         const step = q + 1
-        const logic = data[q].Logic.split(',')
+        const logic = data[q].Logic.split(', ')
         if (logic.length > 1 && q > 0) {
           // Jump ahead in time and add the conditionals to subsequent questions
           for (let l = 0; l < logic.length; l++) {
             // Check if the condition has a star - if it does, both conditions here lead to that question
+            const logicVal = logic[l]
             if (logic[l].indexOf('*') !== -1) {
-              const goto = parseInt(logic[l].split('*')[0]) - 2
-              if (tags[goto].children) tags[goto].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers.join('||')))
+              const gotoAll = parseInt(logicVal.split('*')[0]) - 2
+              if (tags[gotoAll].children) {
+                tags[gotoAll].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers.join('||')))
+              } else {
+                tags[gotoAll][`cf-conditional-cfc-question-${step}`] = answers.join('||')
+              }
             } else {
-              const goto = parseInt(logic[l]) - 2
-              if (tags[goto].children) tags[goto].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers[l]))
+              const goto = parseInt(logicVal) - 2
+              if (tags[goto].children) {
+                tags[goto].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers[l]))
+              } else {
+                tags[goto][`cf-conditional-cfc-question-${step}`] = answers[l]
+              }
             }
           }
         }
       }
 
       const userInterfaceOptions = {
-        // controlElementsInAnimationDelay: 250,
         robot: {
-        //   robotResponseTime: 1000
           chainedResponseTime: 1000
         },
         user: {
@@ -207,8 +230,6 @@ export default {
       window.jQuery('.inputWrapper > textarea').val('')
       setTimeout(() => {
         this.cf.remove()
-        // this.showReload = true
-        this.form1Submitted = true
         this.activateMenu()
       }, 3000)
     }
@@ -218,7 +239,7 @@ export default {
   mounted () {
     // Load in the specific sheet json via axios
     // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/VUE_APP_SHEETSU_API_KEY/sheets/conversation-2
-    this.setForm('')
+    this.setForm('conversation-3')
   }
 }
 </script>
