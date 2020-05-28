@@ -30,11 +30,11 @@
     <!-- Content tool -->
     <button type="button" v-show="showReload" class="reload" @click="converse()">Start again</button>
     <div class="columns" v-show="!showMenu && !showAbout && !isLoading">
-      <div class="column is-8 is-offset-2" id="formTarget">
+      <div class="column is-10 is-offset-1" id="formTarget">
       </div>
     </div>
     <div class="columns" v-show="showAbout">
-      <div class="column is-8 is-offset-2 content-block  has-text-left">
+      <div class="column is-10 is-offset-1 content-block  has-text-left">
         <h3>About</h3>
         <p>Nobody likes filling in lengthy paperwork or online forms.</p>
 <p>The clever folks over at <a href="https://space10.com">Space10</a> have looked to address this problem by developing a conversational form framework, that takes a normal web form and converts it into a more dynamic two-way dialogue.</p>
