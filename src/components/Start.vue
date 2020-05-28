@@ -29,7 +29,7 @@
     </div>
     <!-- Content tool -->
     <button type="button" v-show="showReload" class="reload" @click="converse()">Start again</button>
-    <div class="columns" v-show="!showMenu && !showAbout">
+    <div class="columns" v-show="!showMenu && !showAbout && !isLoading">
       <div class="column is-8 is-offset-2" id="formTarget">
       </div>
     </div>
@@ -81,8 +81,7 @@ export default {
     setForm (formName) {
       this.isLoading = true
       this.showMenu = false
-      window.jQuery('.inputWrapper > textarea').val('')
-      if (this.cf) this.cf.remove()
+      // if (this.cf) this.cf.remove()
       this.formIndex = formName.length ? parseInt(formName.split('-')[1]) : 1
       const sheetSuffix = formName !== '' ? `/sheets/${formName}` : ''
       axios

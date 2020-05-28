@@ -31,7 +31,7 @@ module.exports = {
       assetMatch: '**',
       deployPath: '/',
       acl: 'public-read',
-      pwa: true,
+      pwa: false,
       pwaFiles: 'index.html,service-worker.js,manifest.json',
       enableCloudfront: true,
       cloudfrontId: process.env.VUE_APP_CLOUDFRONT_ID,
