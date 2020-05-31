@@ -115,6 +115,7 @@ export default {
         const tagObj = {}
         const step = q + 1
         const answers = data[q].Answers.split(', ')
+        const conditions = data[q].Conditions
         for (const a in answers) {
           answers[a] = answers[a].split('COMMA').join(',')
         }
@@ -133,6 +134,11 @@ export default {
           tagObj.id = data[q].Pipe || tagObj.name
           tagObj.tag = 'input'
           tagObj.type = inputType
+          if (conditions) {
+            const conditionSplit = conditions.split('=')
+            const questionNumber = parseInt(conditionSplit[0] - 1)
+            tagObj[`cf-conditional-cfc-question-${questionNumber}`] = conditionSplit[1]
+          }
           if (inputType === 'textarea') tagObj.rows = 3
         } else {
           tagObj.tag = 'fieldset'
@@ -145,6 +151,11 @@ export default {
             aTag.id = data[q].Pipe || `cfc-${step}-a-${a}`
             aTag['cf-label'] = answers[a]
             aTag.value = answers[a]
+            if (conditions) {
+              const conditionSplit = conditions.split('=')
+              const questionNumber = parseInt(conditionSplit[0] - 1)
+              aTag[`cf-conditional-cfc-question-${questionNumber}`] = conditionSplit[1]
+            }
             tagObj.children.push(aTag)
           }
         }
@@ -152,7 +163,7 @@ export default {
         tags.push(tagObj)
       }
       // Loop again and add logic
-      for (let q = 0; q < data.length; q++) {
+      /* for (let q = 0; q < data.length; q++) {
         const answers = data[q].Answers.split(', ')
         for (const a in answers) {
           answers[a] = answers[a].split('COMMA').join(',')
@@ -181,7 +192,7 @@ export default {
             }
           }
         }
-      }
+      } */
 
       const userInterfaceOptions = {
         robot: {
