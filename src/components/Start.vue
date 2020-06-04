@@ -65,7 +65,7 @@ export default {
       gaCategory: 'CF Tool - Worksafe Conversation Tester',
       showReload: false,
       globalTags: {},
-      isLoading: true
+      isLoading: false
     }
   },
   methods: {
@@ -249,7 +249,7 @@ export default {
   mounted () {
     // Load in the specific sheet json via axios
     // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/VUE_APP_SHEETSU_API_KEY/sheets/conversation-2
-    this.setForm('conversation-3')
+    // this.setForm('conversation-3')
   }
 }
 </script>
