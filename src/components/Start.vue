@@ -19,6 +19,7 @@
         <li><button type="button" @click="setForm('')" >Conversation 1</button></li>
         <li><button type="button" @click="setForm('conversation-2')">Conversation 2</button></li>
         <li><button type="button" @click="setForm('conversation-3')">Conversation 3</button></li>
+        <li><button type="button" @click="setForm('conversation-4')">Conversation 4</button></li>
       </ul>
     </section>
     <!-- Loader -->
