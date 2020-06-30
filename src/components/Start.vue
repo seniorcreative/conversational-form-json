@@ -16,10 +16,10 @@
     <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
       <ul>
-        <li><button type="button" @click="setForm('')" >Conversation 1</button></li>
-        <li><button type="button" @click="setForm('conversation-2')">Conversation 2</button></li>
-        <li><button type="button" @click="setForm('conversation-3')">Conversation 3</button></li>
-        <li><button type="button" @click="setForm('conversation-4')">Conversation 4</button></li>
+        <li><button type="button" @click="setForm(1)" >Conversation 1</button></li>
+        <li><button type="button" @click="setForm(2)">Conversation 2</button></li>
+        <li><button type="button" @click="setForm(3)">Conversation 3</button></li>
+        <li><button type="button" @click="setForm(4)">Conversation 4</button></li>
       </ul>
     </section>
     <!-- Loader -->
@@ -49,6 +49,7 @@
 <script>
 import axios from 'axios'
 import { ConversationalForm } from 'conversational-form'
+import { GoogleSpreadsheet } from 'google-spreadsheet'
 
 export default {
   name: 'Start',
@@ -59,14 +60,23 @@ export default {
     return {
       showMenu: false,
       showAbout: false,
-      formIndex: 1,
+      sheetIndex: 1,
       templateData: {},
       formData: {},
       cf: null,
       gaCategory: 'CF Tool - Worksafe Conversation Tester',
       showReload: false,
       globalTags: {},
-      isLoading: false
+      isLoading: false,
+      doc: null,
+      sheet1: null,
+      sheet2: null,
+      sheet3: null,
+      sheet4: null,
+      rows1: null,
+      rows2: null,
+      rows3: null,
+      rows4: null
     }
   },
   methods: {
@@ -79,19 +89,25 @@ export default {
     toggle (paramName) {
       this[paramName] = !this[paramName]
     },
-    setForm (formName) {
+    setForm (index) {
       this.isLoading = true
       this.showMenu = false
+      this.sheetIndex = index
+      // this.sheet = this.doc.sheetsByIndex[this.sheetIndex - 1] // or use doc.sheetsById[id]
+      // this.rows = this.getRows()
+      this.formatJSONAsTags(this.rows1)
+      this.isLoading = false
+      //     this.isLoading = false
       // if (this.cf) this.cf.remove()
-      this.formIndex = formName.length ? parseInt(formName.split('-')[1]) : 1
-      const sheetSuffix = formName !== '' ? `/sheets/${formName}` : ''
-      axios
-        .get(`https://sheetsu.com/apis/v1.0bu/${process.env.VUE_APP_SHEETSU_API_KEY}${sheetSuffix}`)
-        .then(response => {
-          this.formatJSONAsTags(response.data)
-          this.isLoading = false
-        }
-        )
+      // this.sheetIndex = formName.length ? parseInt(formName.split('-')[1]) : 1
+      // const sheetSuffix = formName !== '' ? `/sheets/${formName}` : ''
+      // axios
+      //   .get(`https://sheetsu.com/apis/v1.0bu/${process.env.VUE_APP_SHEETSU_API_KEY}${sheetSuffix}`)
+      //   .then(response => {
+      //     this.formatJSONAsTags(response.data)
+      //     this.isLoading = false
+      //   }
+      //   )
     },
     submit () {
       // Form submit
@@ -115,7 +131,7 @@ export default {
       for (let q = 0; q < data.length; q++) {
         const tagObj = {}
         const step = q + 1
-        const answers = data[q].Answers.split(', ')
+        const answers = data[q].Answers ? data[q].Answers.split(', ') : []
         const conditions = data[q].Conditions
         for (const a in answers) {
           answers[a] = answers[a].split('COMMA').join(',')
@@ -163,37 +179,6 @@ export default {
 
         tags.push(tagObj)
       }
-      // Loop again and add logic
-      /* for (let q = 0; q < data.length; q++) {
-        const answers = data[q].Answers.split(', ')
-        for (const a in answers) {
-          answers[a] = answers[a].split('COMMA').join(',')
-        }
-        const step = q + 1
-        const logic = data[q].Logic.split(', ')
-        if (logic.length > 1 && q > 0) {
-          // Jump ahead in time and add the conditionals to subsequent questions
-          for (let l = 0; l < logic.length; l++) {
-            // Check if the condition has a star - if it does, both conditions here lead to that question
-            const logicVal = logic[l]
-            if (logic[l].indexOf('*') !== -1) {
-              const gotoAll = parseInt(logicVal.split('*')[0]) - 2
-              if (tags[gotoAll].children) {
-                tags[gotoAll].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers.join('||')))
-              } else {
-                tags[gotoAll][`cf-conditional-cfc-question-${step}`] = answers.join('||')
-              }
-            } else {
-              const goto = parseInt(logicVal) - 2
-              if (tags[goto].children) {
-                tags[goto].children.map(c => (c[`cf-conditional-cfc-question-${step}`] = answers[l]))
-              } else {
-                tags[goto][`cf-conditional-cfc-question-${step}`] = answers[l]
-              }
-            }
-          }
-        }
-      } */
 
       const userInterfaceOptions = {
         robot: {
@@ -219,8 +204,8 @@ export default {
     flowStepCallback (dto, success, error) {
       const currentStep = this.cf.flowManager.getStep() + 1 // Steps are 0-based so we add 1
       const maxSteps = this.cf.flowManager.maxSteps // This value is not 0-based
-      const gaAction = `Form ${this.formIndex} Step ${currentStep}/${maxSteps}`
-      const gaLabel = `Form ${this.formIndex} Field name - ${dto.tag.name}` // We only track actual field name for reference purpose. If you want to track the actual value you may do so.
+      const gaAction = `Form ${this.sheetIndex} Step ${currentStep}/${maxSteps}`
+      const gaLabel = `Form ${this.sheetIndex} Field name - ${dto.tag.name}` // We only track actual field name for reference purpose. If you want to track the actual value you may do so.
       this.globalTags[dto.tag.id] = dto.text // Stash as global so can use in the next form?
       window.gtag('event', 'CF event', {
         event_category: this.gaCategory,
@@ -233,8 +218,8 @@ export default {
     submitCallback () {
       window.gtag('event', 'CF submitted', {
         event_category: this.gaCategory,
-        event_action: `Form ${this.formIndex} submitted`,
-        event_label: `Reached end of form ${this.formIndex}`
+        event_action: `Form ${this.sheetIndex} submitted`,
+        event_label: `Reached end of form ${this.sheetIndex}`
       })
       // this.cf.addRobotChatResponse('Thanks for your feedback.')
       // Kill form?
@@ -250,7 +235,39 @@ export default {
   mounted () {
     // Load in the specific sheet json via axios
     // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/VUE_APP_SHEETSU_API_KEY/sheets/conversation-2
-    // this.setForm('conversation-3')
+    // this.setForm(1)
+  },
+  created () {
+    // spreadsheet key is the long id in the sheets URL
+    const apiKey = process.env.VUE_APP_SHEET_API_KEY
+    const sheetID = process.env.VUE_APP_SHEET_ID
+    this.loadSheet = async () => {
+      this.doc = new GoogleSpreadsheet(sheetID)
+
+      // OR load directly from json file if not in secure environment
+      // await doc.useServiceAccountAuth(require('./creds-from-google.json'))
+      // OR use API key -- only for read-only access to public sheets
+      this.doc.useApiKey(apiKey)
+
+      await this.doc.loadInfo() // loads document properties and worksheets
+      console.log('Got doc data', this.doc)
+      this.sheet1 = this.doc.sheetsByIndex[0]
+      this.sheet2 = this.doc.sheetsByIndex[1]
+      this.sheet3 = this.doc.sheetsByIndex[2]
+      this.sheet4 = this.doc.sheetsByIndex[3]
+      // console.log(`Sheet title: ${this.sheet.title}`)
+      // console.log(`Sheet row count: ${this.sheet.rowCount}`)
+
+      // read rows
+      this.rows1 = await this.sheet1.getRows()
+      this.rows2 = await this.sheet2.getRows()
+      this.rows3 = await this.sheet3.getRows()
+      this.rows4 = await this.sheet4.getRows()
+
+      //
+      this.setForm(1)
+    }
+    this.loadSheet()
   }
 }
 </script>
