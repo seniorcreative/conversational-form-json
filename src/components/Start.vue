@@ -39,7 +39,7 @@
         <h3>About</h3>
         <p>Nobody likes filling in lengthy paperwork or online forms.</p>
 <p>The clever folks over at <a href="https://space10.com">Space10</a> have looked to address this problem by developing a conversational form framework, that takes a normal web form and converts it into a more dynamic two-way dialogue.</p>
-<p>At WorkSafe Innovation we have extended on this work as a means to rapidly prototype and test new service conversations with our clients. With a bit of extra code and a third-party app called <a href="https://sheetsu.com/">Sheetsu</a> (which reads a spreadsheet and converts it into JSON), we are now able to manage the conversation questions in a Google spreadsheet and quickly test different content variations by applying some conditional logic.</p>
+<p>At WorkSafe Innovation we have extended on this work as a means to rapidly prototype and test new service conversations with our clients. We manage the conversation questions in a Google spreadsheet and quickly test different content variations by applying some conditional logic.</p>
 <p>We would like to say thanks to Space10 for their groundwork and in the spirit of continuing the conversation with other developers/designers have made our code available for others to reuse <a href="https://bitbucket.org/worksafeinnovation/conversational-form-json/src/master/">here</a>.</p>
       </div>
     </div>
@@ -93,21 +93,8 @@ export default {
       this.isLoading = true
       this.showMenu = false
       this.sheetIndex = index
-      // this.sheet = this.doc.sheetsByIndex[this.sheetIndex - 1] // or use doc.sheetsById[id]
-      // this.rows = this.getRows()
-      this.formatJSONAsTags(this.rows1)
+      this.formatJSONAsTags(this[`rows${index}`])
       this.isLoading = false
-      //     this.isLoading = false
-      // if (this.cf) this.cf.remove()
-      // this.sheetIndex = formName.length ? parseInt(formName.split('-')[1]) : 1
-      // const sheetSuffix = formName !== '' ? `/sheets/${formName}` : ''
-      // axios
-      //   .get(`https://sheetsu.com/apis/v1.0bu/${process.env.VUE_APP_SHEETSU_API_KEY}${sheetSuffix}`)
-      //   .then(response => {
-      //     this.formatJSONAsTags(response.data)
-      //     this.isLoading = false
-      //   }
-      //   )
     },
     submit () {
       // Form submit
@@ -191,7 +178,7 @@ export default {
       }
       const options = {
         context: document.getElementById('formTarget'),
-        theme: 'dark', // FYI this gets a few yellow overrides
+        theme: 'dark', // FYI this gets a few yellow overrides for our brand
         showProgressBar: true,
         userInterfaceOptions,
         submitCallback: this.submitCallback,
@@ -232,11 +219,6 @@ export default {
   },
   computed: {
   },
-  mounted () {
-    // Load in the specific sheet json via axios
-    // Subsequent sheets - syntax is https://sheetsu.com/apis/v1.0su/VUE_APP_SHEETSU_API_KEY/sheets/conversation-2
-    // this.setForm(1)
-  },
   created () {
     // spreadsheet key is the long id in the sheets URL
     const apiKey = process.env.VUE_APP_SHEET_API_KEY
@@ -244,19 +226,14 @@ export default {
     this.loadSheet = async () => {
       this.doc = new GoogleSpreadsheet(sheetID)
 
-      // OR load directly from json file if not in secure environment
-      // await doc.useServiceAccountAuth(require('./creds-from-google.json'))
-      // OR use API key -- only for read-only access to public sheets
+      // Use API key -- only for read-only access to public sheets
       this.doc.useApiKey(apiKey)
 
       await this.doc.loadInfo() // loads document properties and worksheets
-      console.log('Got doc data', this.doc)
       this.sheet1 = this.doc.sheetsByIndex[0]
       this.sheet2 = this.doc.sheetsByIndex[1]
       this.sheet3 = this.doc.sheetsByIndex[2]
       this.sheet4 = this.doc.sheetsByIndex[3]
-      // console.log(`Sheet title: ${this.sheet.title}`)
-      // console.log(`Sheet row count: ${this.sheet.rowCount}`)
 
       // read rows
       this.rows1 = await this.sheet1.getRows()
