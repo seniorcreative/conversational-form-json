@@ -3,12 +3,12 @@ module.exports = {
     config
       .plugin('html')
       .tap(args => {
-        args[0].title = 'Worksafe Conversation Tester'
+        args[0].title = 'Community Covid Chat'
         return args
       })
   },
   pwa: {
-    name: 'Worksafe Conversation Tester',
+    name: 'Community Covid Chat',
     iconPaths: {
       favicon32: 'img/icons/32.png',
       favicon16: 'img/icons/16.png',

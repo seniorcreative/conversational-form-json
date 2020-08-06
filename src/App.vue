@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <section class="container">
-      <Start msg="Conversational Form Experiment"/>
+      <Start msg="Community Covid Chat"/>
     </section>
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
 
 html, body {
   height: 100%;
-  background-color: #1a1a1c !important;
+  background-color: #83ffcf !important;
 }
 #app {
   font-family: 'Neue Haas Grotesk Display Pro', Helvetica, Arial, sans-serif;
@@ -43,7 +43,7 @@ html, body {
 }
 a, button.plain, button {
   cursor: pointer;
-  color: #fff !important;
+  color: #333 !important;
   background: none;
   border: none;
   font-size: 1rem;
@@ -85,7 +85,7 @@ section#devpanel {
 section#intro {
   padding-top: 4.4rem;
   p {
-    color: #fff;
+    color: #333;
     font-size: 3rem;
     line-height: 1.1;
     margin-bottom: 32px;
