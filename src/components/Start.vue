@@ -133,8 +133,8 @@ export default {
           }
         }
         tagObj['cf-questions'] = questionContent
-        if (inputType === 'textarea' || inputType === 'text') {
-          tagObj.name = `cfc-${step}`
+        if (inputType === 'textarea' || inputType === 'text' || !inputType) {
+          tagObj.name = `cfc-question-${step}`
           tagObj.id = data[q].Pipe || tagObj.name
           tagObj.tag = 'input'
           tagObj.type = inputType
@@ -153,8 +153,13 @@ export default {
             aTag.type = inputType
             aTag.name = `cfc-question-${step}`
             aTag.id = data[q].Pipe || `cfc-${step}-a-${a}`
-            aTag['cf-label'] = answers[a]
-            aTag.value = answers[a]
+            let answerValue = answers[a]
+            if (answerValue.split('').indexOf('*') !== -1) {
+              answerValue = answerValue.substr(1)
+              aTag.disabled = 'disabled'
+            }
+            aTag['cf-label'] = answerValue
+            aTag.value = answerValue
             if (conditions) {
               const conditionSplit = conditions.split('=')
               const questionNumber = parseInt(conditionSplit[0] - 1)
