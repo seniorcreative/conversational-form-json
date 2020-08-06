@@ -81,8 +81,8 @@ export default {
           }
         }
         tagObj['cf-questions'] = questionContent
-        if (inputType === 'textarea' || inputType === 'text') {
-          tagObj.name = `cfc-${step}`
+        if (inputType === 'textarea' || inputType === 'text' || !inputType) {
+          tagObj.name = `cfc-question-${step}`
           tagObj.id = data[q].Pipe || tagObj.name
           tagObj.tag = 'input'
           tagObj.type = inputType
@@ -101,8 +101,13 @@ export default {
             aTag.type = inputType
             aTag.name = `cfc-question-${step}`
             aTag.id = data[q].Pipe || `cfc-${step}-a-${a}`
-            aTag['cf-label'] = answers[a]
-            aTag.value = answers[a]
+            let answerValue = answers[a]
+            if (answerValue.split('').indexOf('*') !== -1) {
+              answerValue = answerValue.substr(1)
+              aTag.disabled = 'disabled'
+            }
+            aTag['cf-label'] = answerValue
+            aTag.value = answerValue
             if (conditions) {
               const conditionSplit = conditions.split('=')
               const questionNumber = parseInt(conditionSplit[0] - 1)
@@ -140,7 +145,7 @@ export default {
       const currentStep = this.cf.flowManager.getStep() + 1 // Steps are 0-based so we add 1
       const maxSteps = this.cf.flowManager.maxSteps // This value is not 0-based
       const gaAction = `Form ${this.sheetIndex} Step ${currentStep}/${maxSteps}`
-      const gaLabel = `Form ${this.sheetIndex} Field name - ${dto.tag.name}` // We only track actual field name for reference purpose. If you want to track the actual value you may do so.
+      const gaLabel = `Form ${this.sheetIndex} Field name - ${dto.tag.name}, Value - ${dto.text}` // We only track actual field name for reference purpose. If you want to track the actual value you may do so.
       this.globalTags[dto.tag.id] = dto.text // Stash as global so can use in the next form?
       window.gtag('event', 'CF event', {
         event_category: this.gaCategory,
@@ -160,8 +165,8 @@ export default {
       // Kill form?
       window.jQuery('.inputWrapper > textarea').val('')
       setTimeout(() => {
-        this.cf.remove()
-        this.activateMenu()
+        // this.cf.remove()
+        // this.activateMenu()
       }, 3000)
     }
   },
