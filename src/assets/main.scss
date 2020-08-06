@@ -1,57 +1,15 @@
-// @import "~conversational-form/src/styles/mixins/cf-mixins";
-
-// /*
-//     Globals
-// */
-// $cf-color-background: #FDB813;
-// $cf-color-secondary: #FDB813;
-
-// @import "~conversational-form/src/styles/conversational-form";
-
 :root {
     --cf-color-background: #FDB813;
     --cf-color-secondary: #FDB813;
 }
 
-// cf-chat-response.robot text > p {
-//     background: var(--cf-color-background) !important;
-//     color: #222 !important;
-// }
-
-// .cf-button:focus, .cf-button:focus:not([checked=checked]), .cf-button:hover, .cf-button:hover:not([checked=checked]),
-// cf-radio-button.cf-button.highlight, cf-radio-button.cf-button:focus, cf-radio-button.cf-button:hover {
+// cf-chat-response.user text>p {
 //     background: var(--cf-color-background) !important;
 // }
 
-// cf-chat-response.robot text>p {
-//     color: var(--cf-color-background) !important;
-// }
-
-cf-chat-response.user text>p {
-    background: var(--cf-color-background) !important;
-}
-
-// .cf-button {
-//     // color: var(--cf-color-background) !important;
-//     // border: 1px solid var(--cf-color-background) !important;
-// }
-
-// cf-radio-button.cf-button cf-radio {
-//     border: 1px solid var(--cf-color-background) !important;
-// }
-
-// .cf-button[checked=checked]:not(:focus):not(:hover):not(.highlight), .cf-button[selected=selected]:not(:focus):not(:hover):not(.highlight)
-// {
+// .cf-progressBar .bar {
 //     background: var(--cf-color-background) !important;
 // }
-
-// cf-radio-button.cf-button[checked=checked] {
-//     background: var(--cf-color-background) !important;
-// }
-
-.cf-progressBar .bar {
-    background: var(--cf-color-background) !important;
-}
   
 @font-face {
     font-family: 'Neue Haas Grotesk Display Pro';

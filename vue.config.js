@@ -22,7 +22,7 @@ module.exports = {
       awsProfile: 'default',
       endpoint: 'Override the default AWS endpoint with another e.g. DigitalOcean.',
       region: 'ap-southeast-2',
-      bucket: 'conversational-form-tool',
+      bucket: 'community-chat',
       createBucket: false,
       staticHosting: true,
       staticIndexPage: 'index.html',
