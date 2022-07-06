@@ -3,6 +3,11 @@
 This is a vue.js CLI generated project that uses the Google Sheets API to read in a
 google sheet which lives at https://docs.google.com/spreadsheets/d/1bA6CNiqdEOzbQ_qXCxSBKTjMtjIiEWex5mVbRl7GcAg/edit?usp=sharing
 
+
+## Prerequisites
+
+Use Node v14.19.3
+
 ## Project setup
 ```
 npm install
@@ -22,6 +27,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
