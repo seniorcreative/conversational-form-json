@@ -16,7 +16,7 @@
     <!-- Conversations menu -->
     <section id="menu" v-show="showMenu">
       <ul>
-        <li><button type="button" @click="setForm(1)" >Conversation 1</button></li>
+        <li><button type="button" @click="setForm(1)">Conversation 1</button></li>
         <li><button type="button" @click="setForm(2)">Conversation 2</button></li>
         <li><button type="button" @click="setForm(3)">Conversation 3</button></li>
         <li><button type="button" @click="setForm(4)">Conversation 4</button></li>

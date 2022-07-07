@@ -33,7 +33,7 @@ module.exports = {
       acl: 'public-read',
       pwa: false,
       pwaFiles: 'index.html,service-worker.js,manifest.json',
-      enableCloudfront: true,
+      enableCloudfront: false,
       cloudfrontId: process.env.VUE_APP_CLOUDFRONT_ID,
       cloudfrontMatchers: '/*',
       uploadConcurrency: 5,
